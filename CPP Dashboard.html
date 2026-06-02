@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Pipeline Program — PMO Dashboard · Intuit for Education</title>
+<style>
+:root{
+  --bg:#ffffff;--bg2:#f9fafb;--t1:#111827;--t2:#6b7280;
+  --b1:rgba(0,0,0,0.08);--b2:rgba(0,0,0,0.13);
+  --dbg:#fef2f2;--dt:#dc2626;--db:#fecaca;
+  --wbg:#fffbeb;--wt:#d97706;--wb:#fde68a;
+  --sbg:#f0fdf4;--st:#15803d;--sb:#bbf7d0;
+  --ibg:#eff6ff;--it:#1d4ed8;--ib:#bfdbfe;
+  --r1:8px;--r2:12px;
+  --ff:'Avenir Next','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#111827;--bg2:#1f2937;--t1:#f9fafb;--t2:#9ca3af;
+  --b1:rgba(255,255,255,0.08);--b2:rgba(255,255,255,0.13);
+  --dbg:#450a0a;--dt:#f87171;--db:#7f1d1d;
+  --wbg:#451a03;--wt:#fbbf24;--wb:#78350f;
+  --sbg:#052e16;--st:#4ade80;--sb:#14532d;
+  --ibg:#1e3a5f;--it:#60a5fa;--ib:#1d4ed8;}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);font-family:var(--ff)}
+.dash{background:var(--bg)}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:.5px solid var(--b1);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px}
+.bbar{width:3px;height:28px;background:#236CFF;border-radius:2px}
+.bey{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+.bnm{font-size:14px;font-weight:500;color:var(--t1)}
+.bsub{font-size:10px;color:var(--t2);margin-top:1px}
+.stats{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sp{padding:5px 10px;border-radius:var(--r1);border:.5px solid var(--b2);text-align:center;min-width:60px}
+.sp-n{font-size:18px;font-weight:500;line-height:1}
+.sp-l{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);margin-top:1px}
+.sp.d{background:var(--dbg);border-color:var(--db)}.sp.d .sp-n{color:var(--dt)}
+.sp.w{background:var(--wbg);border-color:var(--wb)}.sp.w .sp-n{color:var(--wt)}
+.sp.s{background:var(--sbg);border-color:var(--sb)}.sp.s .sp-n{color:var(--st)}
+.sp.i{background:var(--ibg);border-color:var(--ib)}.sp.i .sp-n{color:var(--it)}
+.btn{padding:5px 11px;font-size:12px;font-weight:500;background:#236CFF;color:#fff;border:none;border-radius:var(--r1);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.nbar{padding:5px 14px;font-size:10px;color:var(--t2);background:var(--bg2);border-bottom:.5px solid var(--b1);display:none;align-items:center;gap:6px}
+.nbar.show{display:flex}
+.nbar-x{margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;color:var(--t2)}
+.rch{padding:10px 14px 8px;border-bottom:.5px solid var(--b1)}
+.rch-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px}
+.rch-ttl{font-size:11px;font-weight:500;color:var(--t1)}
+.rch-meta{display:flex;gap:14px;flex-wrap:wrap}
+.rch-m{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2)}
+.dtw-wrap{border-bottom:.5px solid var(--b1)}
+.dtw-hdr{padding:6px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--bg2);user-select:none}
+.dtw-ht{font-size:11px;font-weight:500;color:var(--t1)}
+.dtw-badge{font-size:10px;font-weight:500;padding:1px 7px;border-radius:99px}
+.dtw-chev{margin-left:auto;font-size:14px;color:var(--t2);transition:transform .2s;display:inline-block}
+.dtw-grid{padding:5px 14px 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:2px 12px}
+.dtw-item{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:.5px solid var(--b1)}
+.dtw-dt{font-size:9px;font-weight:500;padding:2px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.dtw-nm{font-size:11px;color:var(--t1);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dtw-ow{font-size:10px;color:var(--t2);white-space:nowrap;flex-shrink:0}
+.dtw-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ctrls{padding:7px 14px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid var(--b1);flex-wrap:wrap}
+.vg{display:flex;gap:3px;background:var(--bg2);border-radius:var(--r1);padding:3px}
+.bv{padding:3px 9px;font-size:11px;font-weight:500;border:none;border-radius:5px;cursor:pointer;background:transparent;color:var(--t2);transition:all .15s;user-select:none}
+.bv.on{background:#236CFF;color:#fff}
+.bt{padding:3px 8px;font-size:10px;font-weight:500;border:.5px solid var(--b1);border-radius:var(--r1);cursor:pointer;background:var(--bg);color:var(--t2);user-select:none}
+.bt.on{color:#fff;border-color:transparent}
+.sep{width:1px;height:20px;background:var(--b1);flex-shrink:0}
+.tl-wrap{display:flex;overflow:hidden}
+.tl-lbls{width:148px;flex-shrink:0;border-right:.5px solid var(--b1);padding-top:34px}
+.tl-lbl{height:64px;display:flex;flex-direction:column;justify-content:center;padding:0 10px;gap:2px;border-bottom:.5px solid var(--b1)}
+.tl-lr{display:flex;align-items:center;gap:5px}
+.tl-ld{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tl-ln{font-size:10px;font-weight:500;color:var(--t2);line-height:1.2;flex:1;min-width:0}
+.tl-lc{font-size:9px;color:var(--t2);white-space:nowrap}
+.hbar{height:3px;border-radius:99px;background:var(--b1);overflow:hidden}
+.hbar-f{height:100%;border-radius:99px}
+.hbar-s{font-size:9px;color:var(--t2);line-height:1}
+.tl-sc{flex:1;overflow-x:auto;overflow-y:hidden}
+.tl-in{position:relative;width:4880px}
+.mhdr{height:34px;position:relative;border-bottom:.5px solid var(--b2);background:var(--bg2)}
+.mlbl{position:absolute;top:0;height:100%;display:flex;align-items:center;padding-left:5px;font-size:8px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
+.mline{position:absolute;top:0;bottom:0;width:.5px;background:var(--b2)}
+.wline{position:absolute;top:0;bottom:0;width:.5px;background:var(--b1);opacity:.4}
+.tbadge{position:absolute;top:3px;font-size:8px;font-weight:500;color:#236CFF;text-transform:uppercase;letter-spacing:.08em;transform:translateX(-50%);white-space:nowrap}
+.btsb{position:absolute;top:3px;font-size:8px;font-weight:500;color:#2F9E44;text-transform:uppercase;letter-spacing:.08em;transform:translateX(-50%);white-space:nowrap}
+.rows{position:relative}
+.vline{position:absolute;top:0;bottom:0;pointer-events:none}
+.today-line{position:absolute;top:0;bottom:0;width:1.5px;background:#236CFF;z-index:5;pointer-events:none}
+.bts-line{position:absolute;top:0;bottom:0;border-left:1.5px dashed #2F9E44;z-index:5;pointer-events:none}
+.bts-box{position:absolute;top:0;bottom:0;background:rgba(47,158,68,.04);z-index:1;pointer-events:none}
+.hl-box{position:absolute;top:0;bottom:0;background:rgba(35,108,255,.04);z-index:1;pointer-events:none}
+.trow{height:64px;position:relative;border-bottom:.5px solid var(--b1)}
+.trow-base{position:absolute;left:0;right:0;top:50%;height:1px;transform:translateY(-50%);opacity:.12}
+.mdot{position:absolute;cursor:pointer;transform:translate(-50%,-50%);border:2px solid;border-radius:50%;transition:transform .12s;z-index:6}
+.mdot:hover,.mdot.sel{transform:translate(-50%,-50%) scale(1.6);z-index:9}
+.mdot.ev{border-radius:3px;transform:translate(-50%,-50%) rotate(45deg)}
+.mdot.ev:hover,.mdot.ev.sel{transform:translate(-50%,-50%) rotate(45deg) scale(1.5)}
+.lgd{padding:7px 14px;border-top:.5px solid var(--b1);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t2)}
+.ld{width:9px;height:9px;border-radius:50%;border:2px solid;flex-shrink:0}
+.lbar{width:1.5px;height:12px;flex-shrink:0}
+.dc{margin:0 14px 14px;border:.5px solid var(--b2);border-radius:var(--r2);background:var(--bg);padding:12px 14px;display:none}
+.dc.show{display:block}
+.dch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.dct{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--t2);margin-bottom:3px}
+.dcn{font-size:14px;font-weight:500;color:var(--t1)}
+.dcx{background:none;border:none;cursor:pointer;font-size:17px;color:var(--t2);line-height:1;padding:0 3px}
+.dcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.dcf label{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);display:block;margin-bottom:2px}
+.dcf span{font-size:12px;color:var(--t1)}
+.dcb{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;margin-bottom:9px}
+.dcno{margin-top:9px;padding-top:9px;border-top:.5px solid var(--b1);font-size:12px;color:var(--t2);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="dash">
+
+<div class="hdr">
+  <div class="brand"><div class="bbar"></div><div>
+    <div class="bey">Intuit for Education &middot; FY26&ndash;27</div>
+    <div class="bnm">Career Pipeline Program &mdash; PMO Dashboard</div>
+    <div class="bsub">Driver: Karla Moultak &nbsp;&middot;&nbsp; PMO: Kathy Sosa-Tandoc &nbsp;&middot;&nbsp; Approver: Lynn Letukas</div>
+  </div></div>
+  <div class="stats">
+    <div class="sp w" id="pill-bts"><div class="sp-n" id="bts-num">61</div><div class="sp-l">Days to BTS</div></div>
+    <div class="sp w"><div class="sp-n" id="ip-num">0</div><div class="sp-l">In Progress</div></div>
+    <div class="sp d"><div class="sp-n" id="ar-num">0</div><div class="sp-l">Overdue</div></div>
+    <div class="sp s"><div class="sp-n" id="don-num">0</div><div class="sp-l">Complete</div></div>
+    <button class="btn" id="rfbtn">&#8635; Sync Sheets</button>
+  </div>
+</div>
+
+<div class="nbar" id="nbar">
+  &#9432; Live sync requires Claude with Google Drive connected. Open this dashboard at claude.ai to enable it.
+  <button class="nbar-x" id="nbar-x">&times;</button>
+</div>
+
+<div class="rch">
+  <div class="rch-hdr">
+    <span class="rch-ttl">Output progress &mdash; milestones complete per program output</span>
+    <div class="rch-meta">
+      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#2F9E44;vertical-align:middle;border-radius:2px"></span> Done</div>
+      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#E67700;vertical-align:middle;border-radius:2px"></span> In Progress</div>
+      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#C92A2A;vertical-align:middle;border-radius:2px"></span> Overdue</div>
+      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#e5e7eb;border:.5px solid #d1d5db;vertical-align:middle;border-radius:2px"></span> Not Started</div>
+    </div>
+  </div>
+  <div style="height:158px;position:relative"><canvas id="cppChart" style="display:block;width:100%;height:158px"></canvas></div>
+</div>
+
+<div class="dtw-wrap">
+  <div class="dtw-hdr" id="dtw-hdr">
+    <span>&#128197;</span>
+    <span class="dtw-ht">Due this week &amp; overdue</span>
+    <span class="dtw-badge" id="dtw-badge">&mdash;</span>
+    <span class="dtw-chev" id="dtw-chev">&#9660;</span>
+  </div>
+  <div id="dtw-grid" class="dtw-grid"></div>
+</div>
+
+<div class="ctrls">
+  <div class="vg" id="view-grp">
+    <button class="bv on" data-view="next14">&#9889; Next 14 Days</button>
+    <button class="bv" data-view="active">&#128260; Active</button>
+    <button class="bv" data-view="overdue">&#128680; Overdue</button>
+    <button class="bv" data-view="all">&#128197; Full Timeline</button>
+  </div>
+  <div class="sep"></div>
+  <div class="vg" id="group-grp">
+    <button class="bv on" data-group="track">By Track</button>
+    <button class="bv" data-group="owner">By Owner</button>
+  </div>
+  <div id="track-btns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+</div>
+
+<div class="tl-wrap">
+  <div class="tl-lbls" id="tl-lbls"></div>
+  <div class="tl-sc" id="tl-sc">
+    <div class="tl-in" id="tl-in">
+      <div class="mhdr" id="mhdr"></div>
+      <div class="rows" id="rows"></div>
+    </div>
+  </div>
+</div>
+
+<div class="lgd">
+  <span style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--t2)">Legend</span>
+  <div class="li"><div class="ld" style="background:#2F9E44;border-color:#2F9E44"></div>Complete</div>
+  <div class="li"><div class="ld" style="background:#E67700;border-color:#E67700"></div>In Progress</div>
+  <div class="li"><div class="ld" style="background:transparent;border-color:#1971C2"></div>Not Started</div>
+  <div class="li"><div class="ld" style="background:#C92A2A;border-color:#C92A2A"></div>Overdue</div>
+  <div class="li"><div class="ld" style="background:#236CFF;border-color:#236CFF;border-radius:3px;transform:rotate(45deg)"></div>Key Milestone</div>
+  <div class="li"><div class="lbar" style="background:#236CFF"></div>Today</div>
+  <div class="li"><div class="lbar" style="border-left:1.5px dashed #2F9E44;width:0"></div>BTS Aug 1</div>
+  <span style="margin-left:auto;font-size:10px;color:var(--t2)">Click any dot for details &middot; Scroll to navigate</span>
+</div>
+
+<div class="dc" id="detail-card">
+  <div class="dch"><div><div class="dct" id="d-track"></div><div class="dcn" id="d-title"></div></div><button class="dcx" id="dc-close">&times;</button></div>
+  <div id="d-badge" class="dcb"></div>
+  <div class="dcg" id="d-grid"></div>
+  <div class="dcno" id="d-notes" style="display:none"></div>
+</div>
+
+</div>
+<script>
+const TW=4800,T0=new Date(2026,3,1),T1=new Date(2027,4,1);
+const TODAY=new Date(2026,5,1),BTS=new Date(2026,7,1);
+const SPAN=T1-T0,ROW_H=64;
+const DBTS=Math.round((BTS-TODAY)/86400000);
+
+function dx(s){if(!s)return -1;const d=new Date(s+'T00:00:00');if(isNaN(d))return -1;return Math.max(0,Math.min(TW,Math.round(((d-T0)/SPAN)*TW)));}
+const TX=dx('2026-06-01'),BX=dx('2026-08-01');
+const SC={done:'#2F9E44',prog:'#E67700',future:'#1971C2',atrisk:'#C92A2A',event:'#236CFF'};
+const SL={done:'Complete',prog:'In Progress',future:'Not Started',atrisk:'Overdue / At Risk',event:'Key Milestone'};
+
+const TRACKS=[
+  {id:'program',label:'Program Oversight',color:'#534AB7'},
+  {id:'curriculum',label:'Curriculum',color:'#0F6E56'},
+  {id:'product',label:'Product',color:'#185FA5'},
+  {id:'highered',label:'Higher Ed',color:'#3B6D11'},
+  {id:'propartner',label:'ProPartner',color:'#D85A30'},
+  {id:'educatorpd',label:'Educator PD',color:'#993556'},
+  {id:'gtm',label:'GTM & Events',color:'#BA7517'},
+  {id:'efficacy',label:'Efficacy',color:'#5F5E5A'},
+];
+
+const MS=[
+  // PROGRAM OVERSIGHT
+  {id:'po1',tr:'program',t:'Budget finalized',due:'2026-04-15',o:'Karla Moultak',st:'done'},
+  {id:'po2',tr:'program',t:'Program Op Mechs established',due:'2026-04-15',o:'Karla Moultak',st:'done'},
+  {id:'po3',tr:'program',t:'DACE + R&Rs set',due:'2026-04-23',o:'Karla Moultak',st:'done'},
+  {id:'po4',tr:'program',t:'Stakeholder Journey Maps — First Draft',due:'2026-05-10',o:'Karla Moultak',st:'done',n:'Drafts complete, shared with team for feedback'},
+  {id:'po5',tr:'program',t:'Journey Maps finalized',due:'2026-06-05',o:'Karla Moultak',st:'future'},
+  {id:'po6',tr:'program',t:'Contracts approved — Premier CAS',due:'2026-06-01',o:'Lynn Letukas',st:'future'},
+  // QBEP PATHWAY
+  {id:'q1',tr:'product',t:'QB Express delivery date finalized',due:'2026-05-15',o:'Jillian Moskovitz',st:'prog',n:'Jillian reaching out to QB Express on timeline for updated curriculum'},
+  {id:'q2',tr:'gtm',t:'Draft messaging for QBEP landing page & post login',due:'2026-06-01',o:'Katie / Caleb',st:'future'},
+  {id:'q3',tr:'gtm',t:'Finalize QBEP landing page & post login — send for approval',due:'2026-06-12',o:'Katie Rosenberg',st:'future'},
+  {id:'q4',tr:'gtm',t:'GTM updates QBEP landing page',due:'2026-07-01',o:'Katie Rosenberg',st:'future'},
+  {id:'q5',tr:'product',t:'Product updates content on QBEP post login page',due:'2026-07-15',o:'Bella Rozenkrants',st:'future'},
+  {id:'q6',tr:'product',t:'KEY MILESTONE: LIVE on QBEP',due:'2026-07-31',o:'Bella Rozenkrants',st:'event',n:'QBEP post-login live with Career Pipeline certification pathway'},
+  // CAS CURRICULUM PT 2
+  {id:'cc1',tr:'curriculum',t:'Confirm QBEP v2 content architecture with Product',due:'2026-05-31',o:'Bella Rozenkrants',st:'prog'},
+  {id:'cc2',tr:'curriculum',t:'Net-new modular build scoped with updated QB curriculum',due:'2026-05-31',o:'Jillian / Bella',st:'atrisk',n:'Not started — due 5/31'},
+  {id:'cc3',tr:'curriculum',t:'Curriculum partner engaged for Phase 2 scope',due:'2026-06-15',o:'Jillian Moskovitz',st:'future'},
+  {id:'cc4',tr:'curriculum',t:'Development begins with curriculum partner',due:'2026-06-15',o:'Jillian Moskovitz',st:'future'},
+  {id:'cc5',tr:'product',t:'QBO sandbox data integration planned',due:'2026-07-01',o:'Bella Rozenkrants',st:'future'},
+  {id:'cc6',tr:'curriculum',t:'Full draft of V3 Almighty curriculum complete',due:'2027-02-15',o:'Jillian Moskovitz',st:'future'},
+  {id:'cc7',tr:'curriculum',t:'KEY MILESTONE: LIVE — Full Modular Curriculum (V3 Almighty)',due:'2027-04-01',o:'Bella Rozenkrants',st:'event',n:'Full modular CAS / QB curriculum live on platform — April 2027 target'},
+  // ACADEMIC RESOURCE HUB
+  {id:'arh1',tr:'gtm',t:'Develop microsite brief (purpose, contents, structure)',due:'2026-05-05',o:'Karla / Katie',st:'prog',n:'Draft in progress; feedback round with track leads in progress'},
+  {id:'arh2',tr:'gtm',t:'Brief approved by track leads',due:'2026-05-20',o:'Lynn / Jaclyn / Caleb',st:'atrisk',n:'Not started — due 5/20'},
+  {id:'arh3',tr:'gtm',t:'Confirm roles/responsibilities for launching Hub',due:'2026-05-20',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/20'},
+  {id:'arh4',tr:'gtm',t:'Content strategy + information architecture finalized',due:'2026-05-31',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/31'},
+  {id:'arh5',tr:'gtm',t:'Website wireframes reviewed',due:'2026-06-20',o:'Katie Rosenberg',st:'future'},
+  {id:'arh6',tr:'gtm',t:'Website draft built + internal review',due:'2026-07-01',o:'Katie Rosenberg',st:'future'},
+  {id:'arh7',tr:'gtm',t:'QA + accessibility review',due:'2026-07-15',o:'Katie Rosenberg',st:'future'},
+  {id:'arh8',tr:'product',t:'KEY MILESTONE: Academic Resource Hub LIVE on I4E',due:'2026-08-01',o:'Bella Rozenkrants',st:'event',n:'I4E microsite — one stop shop for curriculum, certifications, case studies, PD'},
+  // QB EDUCATOR BADGE
+  {id:'epd1',tr:'educatorpd',t:'Align with Emily on Badge goals',due:'2026-05-05',o:'Emily / Karla',st:'done'},
+  {id:'epd2',tr:'educatorpd',t:'Draft Educator Badge brief',due:'2026-05-14',o:'Emily Pressman',st:'done',n:'Sent to team for review'},
+  {id:'epd3',tr:'educatorpd',t:'Emily & Brittany connect on badge + learning objectives',due:'2026-05-18',o:'Emily Pressman',st:'atrisk',n:'Not started — due 5/18'},
+  {id:'epd4',tr:'educatorpd',t:'Draft Badge name',due:'2026-05-20',o:'Emily / Caleb / Jaclyn',st:'atrisk',n:'Not started — due 5/20'},
+  {id:'epd5',tr:'educatorpd',t:'Badge name, criteria & award pathway aligned',due:'2026-05-30',o:'Emily Pressman',st:'atrisk',n:'Needs approval from Lynn & Jaclyn — due 5/30'},
+  {id:'epd6',tr:'educatorpd',t:'Educator PD curriculum built (async modules)',due:'2026-06-15',o:'Emily Pressman',st:'future'},
+  {id:'epd7',tr:'highered',t:'Pilot group identified (Premier campus educators)',due:'2026-06-30',o:'Caleb Tegtmeier',st:'future'},
+  {id:'epd8',tr:'educatorpd',t:'Educator PD tested with pilot group',due:'2026-07-15',o:'Emily Pressman',st:'future'},
+  {id:'epd9',tr:'gtm',t:'Training & award process placed on Hub',due:'2026-08-15',o:'Katie Rosenberg',st:'future'},
+  {id:'epd10',tr:'educatorpd',t:'KEY MILESTONE: QB Educator Badge Program LIVE',due:'2026-08-01',o:'Emily / Bella',st:'event',n:'Educator badge program live — criteria, PD curriculum, and award pathway active'},
+  // 100 CAS CAMPUSES
+  {id:'cas1',tr:'highered',t:'Outreach strategy finalized',due:'2026-04-15',o:'Caleb Tegtmeier',st:'done'},
+  {id:'cas2',tr:'highered',t:'1-pager for external campus pitch developed',due:'2026-05-03',o:'Caleb / Katie',st:'done'},
+  {id:'cas3',tr:'highered',t:'Approve 1-pager (Legal + Lynn)',due:'2026-05-15',o:'Lynn Letukas',st:'prog',n:'Draft with legal for review'},
+  {id:'cas4',tr:'program',t:'E2E program experience map built',due:'2026-05-03',o:'Caleb / Karla',st:'prog',n:'Drafts complete, shared with team for feedback'},
+  {id:'cas5',tr:'highered',t:'Develop plan for implementation support',due:'2026-07-01',o:'Caleb / Karla',st:'future',n:'Broad partnership acquisition and management for scaled offering'},
+  {id:'cas6',tr:'highered',t:'Educators onboarded to badge PD program (100 campuses)',due:'2026-08-01',o:'Emily / Caleb',st:'future'},
+  {id:'cas7',tr:'highered',t:'KEY MILESTONE: 100 CAS Campuses Enrolled',due:'2027-04-01',o:'Caleb Tegtmeier',st:'event',n:'FY27 goal — 100 institutions enrolled in Career Pipeline program'},
+  // 5 PREMIER CAS CAMPUSES
+  {id:'prem1',tr:'highered',t:'5-10 Premier campus targets identified',due:'2026-04-15',o:'Caleb Tegtmeier',st:'done',n:'UVU confirmed as anchor campus'},
+  {id:'prem2',tr:'highered',t:'Outreach initiated to Premier campuses',due:'2026-05-01',o:'Caleb Tegtmeier',st:'done'},
+  {id:'prem3',tr:'highered',t:'Partnership terms defined (Premier benefits package)',due:'2026-05-25',o:'Caleb / Giovanni',st:'prog'},
+  {id:'prem4',tr:'propartner',t:'Contracts drafted',due:'2026-05-25',o:'Giovanni / Caleb',st:'prog',n:'In progress'},
+  {id:'prem5',tr:'highered',t:'Outline CAS Premier Campus user journey',due:'2026-05-25',o:'Karla / Caleb',st:'atrisk',n:'Not started — due 5/25. Includes roadmap for ProPartner engagements.'},
+  {id:'prem6',tr:'highered',t:'KEY MILESTONE: All 5 Premier CAS Contracts Signed',due:'2026-07-15',o:'Caleb Tegtmeier',st:'event',n:'5 Intuit CAS Campuses signed by July — guiding principles: institution type, engagement, geographic diversity'},
+  {id:'prem7',tr:'highered',t:'Educators onboarded to badge PD (Premier campuses)',due:'2026-08-01',o:'Emily / Caleb',st:'future'},
+  {id:'prem8',tr:'propartner',t:'Outline CAS Lab next steps',due:'2026-10-01',o:'Jaclyn Anku',st:'future',n:'CAS Lab: ProPartner-led mentorship and live client work — applies where entrepreneurship programs exist'},
+  {id:'prem9',tr:'highered',t:'Outline Internship next steps (Premier campuses)',due:'2026-10-01',o:'Caleb Tegtmeier',st:'future'},
+  // 3,800 CERTIFICATIONS
+  {id:'cert1',tr:'highered',t:'Map E2E certification journey',due:'2026-05-15',o:'Karla / Caleb',st:'prog'},
+  {id:'cert2',tr:'highered',t:'BTS outreach / awareness campaign developed',due:'2026-05-01',o:'Caleb / Jillian',st:'atrisk',n:'Not started — due 5/1'},
+  {id:'cert3',tr:'highered',t:'Mid-year certification count reported',due:'2027-01-01',o:'Caleb Tegtmeier',st:'future'},
+  {id:'cert4',tr:'highered',t:'KEY MILESTONE: 3,800 Student Certifications',due:'2027-04-01',o:'Caleb / Jillian',st:'event',n:'FY27 goal — 3,800 students certified (2.5x YoY growth). ProAdvisor QB Level 1.'},
+  // PROPARTNER INTERNSHIPS
+  {id:'int1',tr:'propartner',t:'Outline internship plan with ProPartner teams',due:'2026-05-15',o:'James Lee',st:'prog'},
+  {id:'int2',tr:'propartner',t:'Define student qualification criteria',due:'2026-05-30',o:'James Lee',st:'atrisk',n:'Not started — due 5/30. Cert only, or cert + CAS modules?'},
+  {id:'int3',tr:'propartner',t:'E2E experience map defines placement process',due:'2026-06-05',o:'James Lee',st:'future'},
+  {id:'int4',tr:'propartner',t:'Determine Academic Resource Hub connection',due:'2026-06-05',o:'James Lee',st:'future'},
+  {id:'int5',tr:'propartner',t:'Firm outreach begins',due:'2026-08-15',o:'James Lee',st:'future'},
+  {id:'int6',tr:'propartner',t:'Partnership agreements scoped',due:'2026-10-01',o:'James Lee',st:'future'},
+  {id:'int7',tr:'propartner',t:'Agreements signed; student matching begins',due:'2027-01-05',o:'James Lee',st:'future'},
+  {id:'int8',tr:'propartner',t:'First cohort matched and placed',due:'2027-01-15',o:'James Lee',st:'future'},
+  {id:'int9',tr:'propartner',t:'KEY MILESTONE: 25 ProPartner Students Placed',due:'2027-04-01',o:'James Lee',st:'event',n:'25 students placed with ProPartner firms — FY27 goal'},
+  // 100 PROPARTNERS ENGAGED
+  {id:'pp1',tr:'propartner',t:'Develop brief: value prop + program components',due:'2026-05-15',o:'Jaclyn Anku',st:'prog',n:'Includes what "engaged" means: mentor / guest lecturer / hiring?'},
+  {id:'pp2',tr:'propartner',t:'KEY DELIVERABLE: QB Partner Plan v1 Complete',due:'2026-05-25',o:'Jaclyn / Lynn',st:'atrisk',n:'Not started — due 5/25. Critical for unlocking ProPartner track.'},
+  {id:'pp3',tr:'propartner',t:'Identify ProPartner targets aligned to CAS campuses',due:'2026-07-15',o:'Jaclyn Anku',st:'future'},
+  {id:'pp4',tr:'propartner',t:'First ProPartners paired with Premier CAS campuses',due:'2026-08-01',o:'Jaclyn Anku',st:'future'},
+  {id:'pp5',tr:'propartner',t:'KEY MILESTONE: 100 ProPartners Linked with Institutions',due:'2027-04-01',o:'Jaclyn Anku',st:'event',n:'100 ProAdvisors engaged as mentors, guest lecturers, or hiring firms'},
+  // GTM & EVENTS
+  {id:'g1',tr:'gtm',t:'Messaging Playbook drafted',due:'2026-05-05',o:'Katie Rosenberg',st:'done',n:'Source of truth for all downstream briefs and activations'},
+  {id:'g2',tr:'gtm',t:'Intuit Connect Draft Brief',due:'2026-05-05',o:'Jaclyn Anku',st:'done'},
+  {id:'g3',tr:'gtm',t:'Messaging Playbook approved',due:'2026-05-19',o:'Lynn / Dave / Jaclyn',st:'done'},
+  {id:'g4',tr:'gtm',t:'Better Together Tour resourcing set',due:'2026-05-15',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/15. First event: Atlanta 5/28. Gallery walk + Brittany Brown co-speaker.'},
+  {id:'g5',tr:'gtm',t:'UVU case study content captured + production shoot',due:'2026-05-25',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/25'},
+  {id:'g6',tr:'propartner',t:'Partnerships strategy drafted',due:'2026-05-25',o:'Giovanni Dubois',st:'atrisk',n:'Not started — due 5/25'},
+  {id:'g7',tr:'gtm',t:'Intuit Connect — attendee invites sent',due:'2026-05-30',o:'Katie / Caleb',st:'atrisk',n:'Not started — due 5/30'},
+  {id:'g8',tr:'gtm',t:'Partnerships strategy approved',due:'2026-06-05',o:'Lynn Letukas',st:'future'},
+  {id:'g9',tr:'gtm',t:'BTS Plan locked',due:'2026-06-15',o:'Katie Rosenberg',st:'future'},
+  {id:'g10',tr:'gtm',t:'UVU Case Study published on Resource Hub',due:'2026-07-01',o:'Katie / Bella',st:'future'},
+  {id:'g11',tr:'gtm',t:'AAA Conference',due:'2026-08-01',o:'Katie / Giovanni',st:'event',n:'KEY EVENT — $4,500 booth. Develop conference strategy with Giovanni.'},
+  {id:'g12',tr:'gtm',t:'Post-BTS campaign: highlight early results',due:'2026-09-05',o:'Katie Rosenberg',st:'future'},
+  {id:'g13',tr:'gtm',t:'Intuit Connect — Pre-Con CAS Educator Roundtable',due:'2026-10-25',o:'Jaclyn Anku',st:'event',n:'KEY EVENT — CAS Campus pre-conference roundtable. 1pm–5pm. Consider on-stage CAS Campus announcement moment.'},
+  {id:'g14',tr:'gtm',t:'Case Study (February highlight)',due:'2027-02-25',o:'Katie Rosenberg',st:'future',n:'Highlights new curriculum and product experience in practice'},
+  // EFFICACY
+  {id:'eff1',tr:'efficacy',t:'Carol reviews CPP materials; outlines efficacy options',due:'2026-06-01',o:'Carol Lee',st:'prog',n:'Efficacy outline complete — will finalize once program components are locked'},
+  {id:'eff2',tr:'efficacy',t:'Finalize efficacy study outline',due:'2026-06-01',o:'Carol Lee',st:'prog',n:'Scope admin and supervisor survey extension'},
+];
+
+// Owner colors
+const OMAP={'Karla Moultak':'Karla M.','Karla / Katie':'Karla M.','Karla / Caleb':'Karla M.','Enza Pollifrone':'Enza P.','Lynn Letukas':'Lynn L.','Lynn / Jaclyn / Caleb':'Lynn L.','Lynn / Dave / Jaclyn':'Lynn L.','Lynn / Caleb':'Lynn L.','Katie Rosenberg':'Katie R.','Katie / Caleb':'Katie R.','Katie / Bella':'Katie R.','Caleb Tegtmeier':'Caleb T.','Caleb / Giovanni':'Caleb T.','Caleb / Karla':'Caleb T.','Caleb / Jillian':'Caleb T.','Caleb / Katie':'Katie R.','Jillian Moskovitz':'Jillian M.','Jillian / Bella':'Jillian M.','Bella Rozenkrants':'Bella R.','Emily Pressman':'Emily P.','Emily / Karla':'Emily P.','Emily / Caleb':'Emily P.','Emily / Bella':'Emily P.','Jaclyn Anku':'Jaclyn A.','Jaclyn / Lynn':'Jaclyn A.','Giovanni Dubois':'Giovanni D.','Giovanni / Caleb':'Giovanni D.','James Lee':'James L.','Carol Lee':'Carol L.'};
+const OCOLORS={'Karla M.':'#534AB7','Lynn L.':'#185FA5','Katie R.':'#BA7517','Caleb T.':'#3B6D11','Jillian M.':'#0F6E56','Bella R.':'#185FA5','Emily P.':'#993556','Jaclyn A.':'#D85A30','Giovanni D.':'#C76B00','James L.':'#5F5E5A','Carol L.':'#7048A8','Enza P.':'#534AB7'};
+function normO(r){if(!r)return'Unassigned';return OMAP[r]||(r.split(/[/,]+/)[0].trim());}
+
+// Output progress data for canvas chart
+const OUTPUTS=[
+  {name:'QBEP Pathway',done:0,prog:1,atrisk:0,future:4},
+  {name:'CAS Curriculum',done:0,prog:1,atrisk:1,future:4},
+  {name:'Resource Hub',done:0,prog:1,atrisk:3,future:3},
+  {name:'Educator Badge',done:2,prog:0,atrisk:3,future:4},
+  {name:'100 CAS Campuses',done:2,prog:2,atrisk:0,future:2},
+  {name:'5 Premier CAS',done:2,prog:2,atrisk:1,future:1},
+  {name:'ProPartner',done:0,prog:2,atrisk:2,future:8},
+  {name:'GTM & Events',done:3,prog:0,atrisk:4,future:5},
+];
+
+let viewMode='next14',trackFilter='all',groupBy='track',selId=null,dtwOpen=true;
+
+const MONTHS=[
+  {l:'Apr 26',d:'2026-04-01'},{l:'May',d:'2026-05-01'},{l:'Jun',d:'2026-06-01'},
+  {l:'Jul',d:'2026-07-01'},{l:'Aug',d:'2026-08-01'},{l:'Sep',d:'2026-09-01'},
+  {l:'Oct',d:'2026-10-01'},{l:'Nov',d:'2026-11-01'},{l:'Dec',d:'2026-12-01'},
+  {l:'Jan 27',d:'2027-01-01'},{l:'Feb',d:'2027-02-01'},{l:'Mar',d:'2027-03-01'},
+  {l:'Apr 27',d:'2027-04-01'},
+];
+
+function getWeekTicks(){const t=[],d=new Date(2026,3,1);while(d<=T1){t.push(new Date(d));d.setDate(d.getDate()+7);}return t;}
+
+function assignLanes(items){
+  const s=[...items].sort(function(a,b){return dx(a.due)-dx(b.due);});
+  const ends=[0,0,0],PAD=22;
+  return s.map(function(m){const ix=dx(m.due);let lane=2;for(let i=0;i<3;i++){if(ix>=ends[i]+PAD){lane=i;break;}}ends[lane]=ix+PAD;return Object.assign({},m,{lane:lane});});
+}
+
+function getFiltered(){
+  const d14=new Date(2026,5,15);
+  return MS.filter(function(m){
+    if(trackFilter!=='all'&&m.tr!==trackFilter)return false;
+    const d=new Date(m.due+'T00:00:00');
+    if(viewMode==='all')return true;
+    if(viewMode==='overdue')return m.st==='atrisk';
+    if(viewMode==='active')return['prog','atrisk','event'].includes(m.st);
+    if(viewMode==='next14'){if(m.st==='event'||m.st==='atrisk'||m.st==='prog')return true;return d>=TODAY&&d<=d14;}
+    return true;
+  });
+}
+
+function trackStats(id){
+  const items=MS.filter(function(m){return m.tr===id;});
+  const total=items.filter(function(m){return m.st!=='event';}).length;
+  const done=items.filter(function(m){return m.st==='done';}).length;
+  const risk=items.filter(function(m){return m.st==='atrisk';}).length;
+  return{done:done,total:total,risk:risk,pct:total?Math.round(done/total*100):0};
+}
+
+function getOwnerRows(filtered){
+  const om={};
+  filtered.forEach(function(m){const o=normO(m.o);if(!om[o])om[o]=[];om[o].push(m);});
+  return Object.entries(om).map(function(e){return{name:e[0],items:e[1],color:OCOLORS[e[0]]||'#666',id:e[0]};}).sort(function(a,b){return b.items.filter(function(m){return['prog','atrisk'].includes(m.st);}).length-a.items.filter(function(m){return['prog','atrisk'].includes(m.st);}).length;});
+}
+
+function addRow(lbls,rows,def,isOwner){
+  const LANE_Y=[Math.round(ROW_H*.28),Math.round(ROW_H*.5),Math.round(ROW_H*.72)];
+  const lbl=document.createElement('div');lbl.className='tl-lbl';lbl.style.opacity=def.items.length?'1':'0.3';
+  if(isOwner){
+    const risk=def.items.filter(function(m){return m.st==='atrisk';}).length;
+    const prog=def.items.filter(function(m){return m.st==='prog';}).length;
+    const done=def.items.filter(function(m){return m.st==='done';}).length;
+    const badge=risk>0?'<span style="color:#C92A2A">'+risk+' overdue</span>':prog>0?'<span style="color:#E67700">'+prog+' in prog.</span>':'<span>'+done+' done</span>';
+    lbl.innerHTML='<div class="tl-lr"><div class="tl-ld" style="background:'+def.color+'"></div><span class="tl-ln">'+def.name+'</span><span class="tl-lc">'+def.items.length+'</span></div><div class="hbar-s">'+badge+'</div>';
+  }else{
+    const st=trackStats(def.id);
+    const bc=st.risk>0?'#C92A2A':st.pct>70?'#2F9E44':st.pct>40?'#E67700':'#1971C2';
+    const statsTxt=st.risk>0?'<span style="color:#C92A2A">'+st.risk+' overdue</span>':st.pct+'% done';
+    lbl.innerHTML='<div class="tl-lr"><div class="tl-ld" style="background:'+def.color+'"></div><span class="tl-ln">'+def.label+'</span><span class="tl-lc">'+st.done+'/'+st.total+'</span></div><div class="hbar"><div class="hbar-f" style="width:'+st.pct+'%;background:'+bc+'"></div></div><div class="hbar-s">'+statsTxt+'</div>';
+  }
+  lbls.appendChild(lbl);
+
+  const row=document.createElement('div');row.className='trow';
+  const base=document.createElement('div');base.className='trow-base';base.style.background=def.color;row.appendChild(base);
+
+  assignLanes(def.items).forEach(function(m){
+    const x=dx(m.due);if(x<0)return;
+    const sc=SC[m.st]||def.color;
+    const isEvent=m.st==='event',isDone=m.st==='done';
+    const sz=isEvent?15:11;
+    const filled=isDone||m.st==='prog'||m.st==='atrisk'||isEvent;
+    const dot=document.createElement('div');
+    dot.className='mdot'+(isEvent?' ev':'')+(selId===m.id?' sel':'');
+    dot.style.left=x+'px';dot.style.top=(LANE_Y[m.lane]||LANE_Y[1])+'px';
+    dot.style.width=sz+'px';dot.style.height=sz+'px';
+    dot.style.borderColor=sc;dot.style.background=filled?sc:'transparent';
+    dot.title=m.t+' | '+m.o+' | '+m.due;
+    dot.addEventListener('click',function(){showDetail(m.id);});
+    row.appendChild(dot);
+  });
+  rows.appendChild(row);
+}
+
+function render(){
+  const filtered=getFiltered();
+  document.getElementById('ar-num').textContent=MS.filter(function(m){return m.st==='atrisk';}).length;
+  document.getElementById('ip-num').textContent=MS.filter(function(m){return m.st==='prog';}).length;
+  document.getElementById('don-num').textContent=MS.filter(function(m){return m.st==='done';}).length;
+  document.getElementById('bts-num').textContent=DBTS;
+
+  const lbls=document.getElementById('tl-lbls'),rows=document.getElementById('rows');
+  lbls.innerHTML='';rows.innerHTML='';
+
+  const mhdr=document.getElementById('mhdr');mhdr.innerHTML='';
+  getWeekTicks().forEach(function(wk){
+    const d=document.createElement('div');d.className='wline';d.style.left=dx(wk.toISOString().split('T')[0])+'px';mhdr.appendChild(d);
+  });
+  MONTHS.forEach(function(m){
+    const xp=dx(m.d);
+    const line=document.createElement('div');line.className='mline';line.style.left=xp+'px';mhdr.appendChild(line);
+    const lbl=document.createElement('div');lbl.className='mlbl';lbl.style.left=xp+'px';lbl.textContent=m.l.toUpperCase();mhdr.appendChild(lbl);
+  });
+  const tb=document.createElement('div');tb.className='tbadge';tb.style.left=TX+'px';tb.textContent='Today Jun 1';mhdr.appendChild(tb);
+  const bb=document.createElement('div');bb.className='btsb';bb.style.left=BX+'px';bb.textContent='BTS Aug 1';mhdr.appendChild(bb);
+
+  // BTS highlight box
+  const btsBox=document.createElement('div');btsBox.className='bts-box';btsBox.style.left=dx('2026-07-15')+'px';btsBox.style.width=(BX-dx('2026-07-15'))+'px';rows.appendChild(btsBox);
+
+  if(viewMode==='next14'){
+    const hl=document.createElement('div');hl.className='hl-box';hl.style.left=TX+'px';hl.style.width=(dx('2026-06-15')-TX)+'px';rows.appendChild(hl);
+  }
+  getWeekTicks().forEach(function(wk){
+    const d=document.createElement('div');d.className='vline';d.style.left=dx(wk.toISOString().split('T')[0])+'px';d.style.width='.5px';d.style.background='rgba(0,0,0,0.04)';rows.appendChild(d);
+  });
+  MONTHS.forEach(function(m){
+    const d=document.createElement('div');d.className='vline';d.style.left=dx(m.d)+'px';d.style.width='.5px';d.style.background='rgba(0,0,0,0.1)';rows.appendChild(d);
+  });
+  const tl=document.createElement('div');tl.className='today-line';tl.style.left=TX+'px';rows.appendChild(tl);
+  const btsl=document.createElement('div');btsl.className='bts-line';btsl.style.left=BX+'px';rows.appendChild(btsl);
+
+  if(groupBy==='owner'){
+    getOwnerRows(filtered).forEach(function(def){addRow(lbls,rows,def,true);});
+  }else{
+    TRACKS.forEach(function(tr){
+      const items=filtered.filter(function(m){return m.tr===tr.id;});
+      if(!items.length&&trackFilter!=='all')return;
+      addRow(lbls,rows,Object.assign({},tr,{items:items}),false);
+    });
+  }
+  if(selId){const m=MS.find(function(x){return x.id===selId;});if(m)renderDetail(m);}
+  renderDTW();
+}
+
+function renderDTW(){
+  const end=new Date(2026,5,7);
+  const items=MS.filter(function(m){
+    const d=new Date(m.due+'T00:00:00');
+    return(d>=TODAY&&d<=end&&m.st!=='done'&&m.st!=='event')||m.st==='atrisk';
+  });
+  const unique=items.filter(function(m,i,a){return a.findIndex(function(x){return x.id===m.id;})==i;}).sort(function(a,b){return new Date(a.due)-new Date(b.due);});
+  const risk=unique.filter(function(m){return m.st==='atrisk';}).length;
+  const badge=document.getElementById('dtw-badge');
+  badge.textContent=unique.length+' items'+(risk>0?' · '+risk+' overdue':'');
+  badge.style.background=risk>0?'#fef2f2':'#fffbeb';
+  badge.style.color=risk>0?'#dc2626':'#d97706';
+  const grid=document.getElementById('dtw-grid');
+  grid.innerHTML='';
+  unique.forEach(function(m){
+    const sc=SC[m.st]||'#888';
+    const item=document.createElement('div');item.className='dtw-item';
+    item.innerHTML='<span class="dtw-dt" style="background:'+sc+'18;color:'+sc+'">'+m.due.slice(5).replace('-','/')+'</span><span class="dtw-nm" title="'+m.t+'">'+m.t+'</span><span class="dtw-ow">'+m.o+'</span><div class="dtw-dot" style="background:'+sc+'"></div>';
+    grid.appendChild(item);
+  });
+}
+
+function showDetail(id){selId=(selId===id)?null:id;render();if(!selId)document.getElementById('detail-card').classList.remove('show');}
+
+function renderDetail(m){
+  const tr=TRACKS.find(function(t){return t.id===m.tr;});
+  document.getElementById('d-track').textContent=tr?tr.label:m.tr;
+  document.getElementById('d-title').textContent=m.t;
+  const sc=SC[m.st]||'#888';
+  const b=document.getElementById('d-badge');
+  b.style.background=sc+'18';b.style.color=sc;
+  const dot=document.createElement('div');dot.style.cssText='width:5px;height:5px;border-radius:50%;background:'+sc;
+  b.innerHTML='';b.appendChild(dot);b.appendChild(document.createTextNode(' '+(SL[m.st]||m.st)));
+  document.getElementById('d-grid').innerHTML='<div class="dcf"><label>Due Date</label><span>'+m.due+'</span></div><div class="dcf"><label>Owner</label><span>'+m.o+'</span></div>'+(m.c?'<div class="dcf"><label>Collaborator</label><span>'+m.c+'</span></div>':'')+'<div class="dcf"><label>Workstream</label><span>'+(tr?tr.label:m.tr)+'</span></div>';
+  const notes=document.getElementById('d-notes');
+  if(m.n){notes.textContent=m.n;notes.style.display='block';}else{notes.style.display='none';}
+  document.getElementById('detail-card').classList.add('show');
+}
+
+function clearSel(){selId=null;document.getElementById('detail-card').classList.remove('show');render();}
+
+// Canvas chart — Output Progress
+function drawChart(){
+  const canvas=document.getElementById('cppChart');
+  if(!canvas)return;
+  const W=canvas.parentElement.offsetWidth||600;
+  const H=158;
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  const dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const tc=dark?'#9ca3af':'#6b7280';
+  const LPAD=118,RPAD=32,TPAD=6,RH=14,RG=5;
+  ctx.font='9px system-ui,sans-serif';ctx.textBaseline='middle';
+
+  OUTPUTS.forEach(function(out,i){
+    const y=TPAD+i*(RH+RG);
+    const total=out.done+out.prog+out.atrisk+out.future;
+    if(total===0)return;
+    const bw=W-LPAD-RPAD;
+    ctx.fillStyle=tc;ctx.textAlign='right';
+    ctx.fillText(out.name,LPAD-5,y+RH/2);
+    // Track background
+    ctx.fillStyle=dark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.04)';
+    ctx.fillRect(LPAD,y,bw,RH);
+    let x=LPAD;
+    [{count:out.done,color:'#2F9E44'},{count:out.prog,color:'#E67700'},{count:out.atrisk,color:'#C92A2A'},{count:out.future,color:dark?'#374151':'#e5e7eb'}].forEach(function(s){
+      if(s.count===0)return;
+      const w=(s.count/total)*bw;
+      ctx.fillStyle=s.color;ctx.fillRect(x,y,w,RH);x+=w;
+    });
+    // Pct label
+    const pct=Math.round((out.done/total)*100);
+    ctx.fillStyle=tc;ctx.textAlign='left';
+    ctx.fillText(pct+'%',W-RPAD+3,y+RH/2);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('rfbtn').addEventListener('click',function(){document.getElementById('nbar').classList.add('show');});
+  document.getElementById('nbar-x').addEventListener('click',function(){document.getElementById('nbar').classList.remove('show');});
+  document.getElementById('dc-close').addEventListener('click',clearSel);
+
+  document.getElementById('view-grp').addEventListener('click',function(e){
+    const btn=e.target.closest('[data-view]');if(!btn)return;
+    viewMode=btn.dataset.view;
+    document.querySelectorAll('[data-view]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');
+    selId=null;document.getElementById('detail-card').classList.remove('show');render();
+  });
+
+  document.getElementById('group-grp').addEventListener('click',function(e){
+    const btn=e.target.closest('[data-group]');if(!btn)return;
+    groupBy=btn.dataset.group;
+    document.querySelectorAll('[data-group]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');
+    selId=null;render();
+  });
+
+  document.getElementById('dtw-hdr').addEventListener('click',function(){
+    dtwOpen=!dtwOpen;
+    document.getElementById('dtw-grid').style.display=dtwOpen?'grid':'none';
+    document.getElementById('dtw-chev').style.transform=dtwOpen?'':'rotate(-90deg)';
+  });
+
+  const tbDiv=document.getElementById('track-btns');
+  const allBtn=document.createElement('button');
+  allBtn.id='bt-all';allBtn.className='bt on';allBtn.textContent='All Tracks';
+  allBtn.style.cssText='background:#374151;color:#fff;border-color:transparent';
+  allBtn.addEventListener('click',function(){setTrack('all');});tbDiv.appendChild(allBtn);
+  TRACKS.forEach(function(tr){
+    const b=document.createElement('button');b.id='bt-'+tr.id;b.className='bt';b.textContent=tr.label;
+    b.addEventListener('click',function(){setTrack(tr.id);});tbDiv.appendChild(b);
+  });
+
+  render();
+  drawChart();
+  setTimeout(function(){const sc=document.getElementById('tl-sc');if(sc)sc.scrollLeft=Math.max(0,TX-260);},100);
+});
+
+function setTrack(id){
+  trackFilter=id;
+  document.querySelectorAll('.bt').forEach(function(b){b.classList.remove('on');b.style.background='';b.style.color='';b.style.borderColor='';});
+  const btn=document.getElementById('bt-'+id);
+  if(btn){btn.classList.add('on');if(id==='all'){btn.style.background='#374151';btn.style.color='#fff';btn.style.borderColor='transparent';}else{const tr=TRACKS.find(function(t){return t.id===id;});if(tr){btn.style.background=tr.color;btn.style.color='#fff';btn.style.borderColor='transparent';}}}
+  selId=null;document.getElementById('detail-card').classList.remove('show');render();
+}
+</script>
+</body>
+</html>
