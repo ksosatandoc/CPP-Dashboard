@@ -607,5 +607,337 @@ function setTrack(id){
   selId=null;document.getElementById('detail-card').classList.remove('show');render();
 }
 </script>
+<style>
+.osl{padding:2rem 1.5rem 3rem;font-family:inherit}
+.osl-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin:0 0 12px}
+.osl-toggles{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:#374151}
+.osl-toggles label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.osl-toggles input{accent-color:#236CFF;width:14px;height:14px;cursor:pointer}
+.osl-tracks{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
+.osl-tracks span{font-size:12px;color:#6b7280}
+.osl-tbtn{font-size:11px;padding:4px 12px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:#374151;cursor:pointer;transition:all .15s}
+.osl-tbtn.on{background:#236CFF;color:#fff;border-color:#236CFF}
+.osl-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px;font-size:11.5px;color:#6b7280;align-items:center}
+.osl-legend span{display:flex;align-items:center;gap:5px}
+.osl-ld{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.osl-lk{width:10px;height:10px;border-radius:1px;transform:rotate(45deg);flex-shrink:0}
+.osl-lbar{width:18px;height:6px;border-radius:3px;opacity:.4;flex-shrink:0}
+.osl-outer{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff;position:relative}
+.osl-scroll{overflow-x:auto}
+.osl-table{min-width:860px;width:100%;position:relative}
+.osl-head{display:flex;background:#f9fafb;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10}
+.osl-rl{width:150px;flex-shrink:0;font-size:11px;font-weight:600;color:#6b7280;padding:8px 12px;border-right:1px solid #e5e7eb}
+.osl-months{flex:1;display:flex}
+.osl-mc{flex:1;text-align:center;font-size:10px;color:#9ca3af;padding:8px 0;border-left:1px solid #e5e7eb}
+.osl-row{display:flex;align-items:center;border-bottom:1px solid #f3f4f6;min-height:46px}
+.osl-row:last-child{border-bottom:none}
+.osl-row:hover{background:#fafafa}
+.osl-label{width:150px;flex-shrink:0;font-size:12px;padding:6px 10px 6px 10px;color:#111827;border-right:1px solid #f3f4f6;line-height:1.3;font-weight:500}
+.osl-canvas{flex:1;position:relative;height:46px}
+.osl-lcbar{position:absolute;height:8px;border-radius:4px;top:50%;transform:translateY(-50%);pointer-events:none;z-index:1}
+.osl-vline{position:absolute;top:0;height:100%;width:2px;border-radius:1px;pointer-events:none;z-index:3}
+.osl-dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%);top:50%;cursor:pointer;border:2px solid #fff;z-index:5;transition:transform .15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.osl-dot:hover{transform:translate(-50%,-50%) scale(1.5);z-index:20}
+.osl-key{position:absolute;width:13px;height:13px;border-radius:1px;transform:translate(-50%,-50%) rotate(45deg);top:50%;cursor:pointer;border:2px solid #fff;z-index:5;transition:transform .15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.osl-key:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.5);z-index:20}
+.osl-depsvg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:6;overflow:visible}
+.osl-hint{padding:6px 14px;font-size:11px;color:#9ca3af;background:#f9fafb;border-top:1px solid #e5e7eb}
+.osl-tip{position:fixed;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px 13px;font-size:12px;z-index:9999;pointer-events:none;max-width:220px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.osl-tip-title{font-weight:600;color:#111827;margin-bottom:5px;line-height:1.3}
+.osl-tip-row{display:flex;gap:6px;align-items:center;color:#6b7280;margin-top:3px;font-size:11px}
+</style>
+
+<section class="osl">
+  <div class="osl-title">Swim lane — output lifecycle + dependencies</div>
+
+  <div class="osl-toggles">
+    <label><input type="checkbox" id="osl-lc" checked onchange="oslRender()"> Lifecycle bars</label>
+    <label><input type="checkbox" id="osl-dep" checked onchange="oslRender()"> Dependency arrows</label>
+    <label><input type="checkbox" id="osl-train" checked onchange="oslRender()"> Training links</label>
+    <label><input type="checkbox" id="osl-key" onchange="oslRender()"> Key milestones only</label>
+  </div>
+
+  <div class="osl-tracks">
+    <span>Track:</span>
+    <button class="osl-tbtn on" onclick="oslTrack('all',this)">All</button>
+    <button class="osl-tbtn" onclick="oslTrack('Curriculum',this)">Curriculum</button>
+    <button class="osl-tbtn" onclick="oslTrack('Product',this)">Product</button>
+    <button class="osl-tbtn" onclick="oslTrack('Higher Ed',this)">Higher Ed</button>
+    <button class="osl-tbtn" onclick="oslTrack('GTM',this)">GTM</button>
+    <button class="osl-tbtn" onclick="oslTrack('ProPartner',this)">ProPartner</button>
+    <button class="osl-tbtn" onclick="oslTrack('Educator PD',this)">Educator PD</button>
+  </div>
+
+  <div class="osl-legend">
+    <span><span class="osl-ld" style="background:#22c55e"></span>Complete</span>
+    <span><span class="osl-ld" style="background:#3b82f6"></span>In Progress</span>
+    <span><span class="osl-ld" style="background:#9ca3af"></span>Not Started</span>
+    <span><span class="osl-ld" style="background:#ef4444"></span>Overdue</span>
+    <span><span class="osl-lk" style="background:#f59e0b"></span>Key milestone</span>
+    <span><span class="osl-lbar" style="background:#236CFF"></span>Output lifecycle</span>
+    <span>
+      <svg width="30" height="10" style="overflow:visible;flex-shrink:0">
+        <line x1="1" y1="5" x2="22" y2="5" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <polygon points="22,2 28,5 22,8" fill="#f59e0b"/>
+      </svg>
+      Trains &rarr; enables
+    </span>
+    <span>
+      <svg width="30" height="10" style="overflow:visible;flex-shrink:0">
+        <line x1="1" y1="5" x2="22" y2="5" stroke="#ef4444" stroke-width="1.5"/>
+        <polygon points="22,2 28,5 22,8" fill="#ef4444"/>
+      </svg>
+      Blocks
+    </span>
+    <span><span style="display:inline-block;width:16px;height:2px;background:#ef4444;opacity:.7;border-radius:1px"></span>&nbsp;Today</span>
+    <span><span style="display:inline-block;width:16px;height:2px;background:#236CFF;opacity:.6;border-radius:1px"></span>&nbsp;BTS Aug 1</span>
+  </div>
+
+  <div class="osl-outer">
+    <div class="osl-scroll">
+      <div class="osl-table" id="osl-table"></div>
+    </div>
+    <div class="osl-hint">Click any dot for details &middot; Scroll to navigate</div>
+  </div>
+</section>
+
+<div id="osl-tip" class="osl-tip"></div>
+
+<script>
+(function(){
+var TODAY=new Date('2026-06-04');
+var SC={'Complete':'#22c55e','In Progress':'#3b82f6','Not started':'#9ca3af','Not Started':'#9ca3af','On Hold':'#a855f7','Overdue':'#ef4444'};
+var OC=['#236CFF','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16','#6366f1'];
+var MONTHS=['May 26','Jun 26','Jul 26','Aug 26','Sep 26','Oct 26','Nov 26','Dec 26','Jan 27','Feb 27','Mar 27','Apr 27'];
+var RS=new Date(2026,4,1), RE=new Date(2027,4,30), TD=(RE-RS)/864e5;
+
+var OUTPUTS=[
+  {id:0,short:'Program',    track:'Program'},
+  {id:1,short:'QBEP',       track:'Curriculum'},
+  {id:2,short:'CAS Cur.',   track:'Curriculum'},
+  {id:3,short:'Resource Hub',track:'GTM'},
+  {id:4,short:'Edu. Badge', track:'Educator PD'},
+  {id:5,short:'100 CAS',    track:'Higher Ed'},
+  {id:6,short:'5 Premier',  track:'Higher Ed'},
+  {id:7,short:'3,800 Certs',track:'Higher Ed'},
+  {id:8,short:'25 PP Intern',track:'ProPartner'},
+  {id:9,short:'125 QBL',    track:'Higher Ed'},
+  {id:10,short:'100 PP',    track:'ProPartner'},
+];
+
+var MS=[
+  {o:1,l:'QB Express delivery finalized',    d:'2026-05-15',s:'In Progress',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
+  {o:1,l:'Draft QBEP landing page',          d:'2026-06-01',s:'Not Started',t:'GTM',        dr:'Katie / Caleb',k:false},
+  {o:1,l:'Finalize QBEP landing page',       d:'2026-06-12',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
+  {o:1,l:'LIVE on QBEP',                     d:'2026-07-31',s:'Not Started',t:'Product',    dr:'Bella Rozenkrants',k:true},
+  {o:1,l:'Level 3 curriculum delivery',      d:'2026-08-15',s:'Not Started',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
+  {o:2,l:'Content architecture confirmed',   d:'2026-05-31',s:'In Progress',t:'Product',    dr:'Bella Rozenkrants',k:false},
+  {o:2,l:'Curriculum partner engaged',       d:'2026-06-15',s:'Not Started',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
+  {o:2,l:'Full draft complete',              d:'2027-02-15',s:'Not Started',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
+  {o:2,l:'LIVE — Full modular curriculum',   d:'2027-04-01',s:'Not Started',t:'Product',    dr:'Bella Rozenkrants',k:true},
+  {o:3,l:'Microsite brief approved',         d:'2026-05-20',s:'Not Started',t:'GTM',        dr:'Lynn / Jaclyn / Caleb',k:false},
+  {o:3,l:'Content strategy finalized',       d:'2026-05-31',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
+  {o:3,l:'Website wireframes reviewed',      d:'2026-06-20',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
+  {o:3,l:'Website draft + review',           d:'2026-07-01',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
+  {o:3,l:'QA + accessibility review',        d:'2026-07-15',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
+  {o:3,l:'LIVE on I4E',                      d:'2026-08-01',s:'Not Started',t:'Product',    dr:'Bella Rozenkrants',k:true},
+  {o:4,l:'Badge brief complete',             d:'2026-05-14',s:'Complete',   t:'Educator PD',dr:'Emily Pressman',k:false},
+  {o:4,l:'Badge name & criteria aligned',    d:'2026-05-30',s:'Not Started',t:'Educator PD',dr:'Emily Pressman',k:false},
+  {o:4,l:'Edu PD curriculum built',          d:'2026-06-15',s:'Not Started',t:'Educator PD',dr:'Emily Pressman',k:false},
+  {o:4,l:'Pilot group identified',           d:'2026-06-30',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
+  {o:4,l:'PD tested with pilot',             d:'2026-07-15',s:'Not Started',t:'Educator PD',dr:'Emily Pressman',k:false},
+  {o:4,l:'Badge program LIVE',               d:'2026-08-01',s:'Not Started',t:'Educator PD',dr:'Emily / Bella',k:true},
+  {o:5,l:'Outreach strategy finalized',      d:'2026-04-15',s:'Complete',   t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
+  {o:5,l:'1-pager campus pitch',             d:'2026-05-03',s:'Complete',   t:'Higher Ed',  dr:'Caleb / Katie',k:false},
+  {o:5,l:'1-pager approved',                 d:'2026-05-15',s:'In Progress',t:'Program',    dr:'Lynn Letukas',k:false},
+  {o:5,l:'Educators onboarded to badge PD',  d:'2026-08-01',s:'Not Started',t:'Higher Ed',  dr:'Emily / Caleb',k:false},
+  {o:5,l:'100 campuses enrolled',            d:'2027-04-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:true},
+  {o:6,l:'Premier targets identified',       d:'2026-04-15',s:'Complete',   t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
+  {o:6,l:'Outreach initiated',               d:'2026-05-01',s:'Complete',   t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
+  {o:6,l:'Contracts drafted',                d:'2026-05-25',s:'In Progress',t:'Partnerships',dr:'Giovanni / Caleb',k:false},
+  {o:6,l:'All 5 contracts signed',           d:'2026-07-15',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:true},
+  {o:6,l:'Educators onboarded to badge PD',  d:'2026-08-01',s:'Not Started',t:'Higher Ed',  dr:'Emily / Caleb',k:false},
+  {o:7,l:'E2E cert journey mapped',          d:'2026-05-15',s:'In Progress',t:'Higher Ed',  dr:'Karla / Caleb',k:false},
+  {o:7,l:'BTS awareness campaign',           d:'2026-05-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb / Jillian',k:false},
+  {o:7,l:'Mid-year cert count reported',     d:'2027-01-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
+  {o:7,l:'3,800 certifications',            d:'2027-04-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb / Jillian',k:true},
+  {o:8,l:'Internship plan outlined',         d:'2026-05-15',s:'In Progress',t:'ProPartner', dr:'James Lee',k:false},
+  {o:8,l:'Student criteria defined',         d:'2026-05-30',s:'Not Started',t:'ProPartner', dr:'James Lee',k:false},
+  {o:8,l:'Firm outreach begins',             d:'2026-08-15',s:'Not Started',t:'ProPartner', dr:'James Lee',k:false},
+  {o:8,l:'First cohort matched',             d:'2027-01-15',s:'Not Started',t:'ProPartner', dr:'James Lee',k:false},
+  {o:8,l:'25 students placed',              d:'2027-04-01',s:'Not Started',t:'ProPartner', dr:'James Lee',k:true},
+  {o:9,l:'QB Live plan outlined',           d:'2026-06-01',s:'Not Started',t:'Program',    dr:'Karla / Caleb',k:false},
+  {o:9,l:'Firm outreach QB Live',           d:'2026-09-01',s:'Not Started',t:'Program',    dr:'TBD',k:false},
+  {o:9,l:'125 students placed',            d:'2027-04-01',s:'Not Started',t:'Higher Ed',  dr:'TBD',k:true},
+  {o:10,l:'Value prop brief developed',     d:'2026-05-15',s:'In Progress',t:'ProPartner', dr:'Jaclyn Anku',k:false},
+  {o:10,l:'QB Partner plan v1 complete',    d:'2026-05-25',s:'Not Started',t:'ProPartner', dr:'Jaclyn / Lynn',k:true},
+  {o:10,l:'First ProPartners paired',       d:'2026-08-01',s:'Not Started',t:'ProPartner', dr:'Jaclyn Anku',k:false},
+  {o:10,l:'100 ProPartners linked',         d:'2027-04-01',s:'Not Started',t:'ProPartner', dr:'Jaclyn Anku',k:true},
+];
+
+var DEPS=[
+  {fo:1,fl:'LIVE on QBEP',           to:3,tl:'LIVE on I4E',                     type:'trains'},
+  {fo:1,fl:'LIVE on QBEP',           to:7,tl:'3,800 certifications',            type:'trains'},
+  {fo:2,fl:'LIVE — Full modular curriculum',to:7,tl:'3,800 certifications',     type:'trains'},
+  {fo:3,fl:'LIVE on I4E',            to:5,tl:'Educators onboarded to badge PD', type:'trains'},
+  {fo:3,fl:'LIVE on I4E',            to:7,tl:'3,800 certifications',            type:'trains'},
+  {fo:4,fl:'Badge program LIVE',     to:5,tl:'Educators onboarded to badge PD', type:'trains'},
+  {fo:4,fl:'Badge program LIVE',     to:6,tl:'Educators onboarded to badge PD', type:'trains'},
+  {fo:4,fl:'Badge program LIVE',     to:8,tl:'Student criteria defined',        type:'trains'},
+  {fo:6,fl:'All 5 contracts signed', to:8,tl:'Firm outreach begins',            type:'blocks'},
+];
+
+var activeTrack='all';
+
+function pp(ds){
+  if(!ds)return null;
+  var days=(new Date(ds)-RS)/864e5;
+  return Math.min(99.5,Math.max(0.5,(days/TD)*100));
+}
+
+function getRange(oid){
+  var dates=MS.filter(function(m){return m.o===oid&&m.d;}).map(function(m){return new Date(m.d);}).sort(function(a,b){return a-b;});
+  return dates.length>=2?{s:dates[0],e:dates[dates.length-1]}:null;
+}
+
+window.oslTrack=function(t,btn){
+  activeTrack=t;
+  document.querySelectorAll('.osl-tbtn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  oslRender();
+};
+
+window.oslRender=function(){
+  var showLC   =document.getElementById('osl-lc').checked;
+  var showDep  =document.getElementById('osl-dep').checked;
+  var showTrain=document.getElementById('osl-train').checked;
+  var keyOnly  =document.getElementById('osl-key').checked;
+  var todP=pp(TODAY.toISOString().split('T')[0]);
+  var btsP=pp('2026-08-01');
+  var tbl=document.getElementById('osl-table');
+
+  var visible=OUTPUTS.filter(function(o){
+    if(activeTrack==='all')return true;
+    if(o.track===activeTrack)return true;
+    return MS.some(function(m){return m.o===o.id&&m.t===activeTrack;});
+  });
+
+  var head='<div class="osl-head"><div class="osl-rl">Output</div><div class="osl-months">'
+    +MONTHS.map(function(m){return'<div class="osl-mc">'+m+'</div>';}).join('')
+    +'</div></div>';
+
+  var rows=visible.map(function(o){
+    var col=OC[o.id%OC.length];
+    var rowMs=MS.filter(function(m){return m.o===o.id&&(!keyOnly||m.k);});
+    var lc='';
+    if(showLC){
+      var r=getRange(o.id);
+      if(r){var sp=pp(r.s.toISOString().split('T')[0]),ep=pp(r.e.toISOString().split('T')[0]);
+        lc='<div class="osl-lcbar" style="left:'+sp+'%;width:'+(ep-sp)+'%;background:'+col+';opacity:.35"></div>';}
+    }
+    var dots=rowMs.map(function(m){
+      var p=pp(m.d);if(p===null)return'';
+      var sc=SC[m.s]||'#9ca3af';
+      var enc=encodeURIComponent(JSON.stringify({l:m.l,d:m.d,s:m.s,dr:m.dr,o:o.short}));
+      var ev='onmouseenter="oslTip(event,\''+enc+'\')" onmouseleave="oslHide()"';
+      return m.k
+        ?'<div class="osl-key" style="left:'+p+'%;background:'+sc+'" '+ev+'></div>'
+        :'<div class="osl-dot" style="left:'+p+'%;background:'+sc+'" '+ev+'></div>';
+    }).join('');
+    return'<div class="osl-row">'
+      +'<div class="osl-label" style="border-left:3px solid '+col+'">'+o.short+'</div>'
+      +'<div class="osl-canvas" id="oslc-'+o.id+'">'
+      +lc
+      +'<div class="osl-vline" style="left:'+todP+'%;background:#ef4444;opacity:.65"></div>'
+      +'<div class="osl-vline" style="left:'+btsP+'%;background:#236CFF;opacity:.55"></div>'
+      +dots
+      +'</div></div>';
+  }).join('');
+
+  tbl.innerHTML=head+rows;
+  tbl.style.position='relative';
+
+  if(showDep||showTrain){
+    requestAnimationFrame(function(){oslDrawDeps(showDep,showTrain,visible);});
+  }
+};
+
+function oslDrawDeps(showB,showT,visible){
+  var tbl=document.getElementById('osl-table');
+  tbl.querySelectorAll('.osl-depsvg').forEach(function(s){s.remove();});
+  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','osl-depsvg');
+  var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  [['trains','#f59e0b'],['blocks','#ef4444']].forEach(function(p){
+    var mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+    mk.setAttribute('id','osl-mk-'+p[0]);mk.setAttribute('viewBox','0 0 10 10');
+    mk.setAttribute('refX','8');mk.setAttribute('refY','5');
+    mk.setAttribute('markerWidth','6');mk.setAttribute('markerHeight','6');
+    mk.setAttribute('orient','auto-start-reverse');
+    var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d','M2 1L8 5L2 9');path.setAttribute('fill','none');
+    path.setAttribute('stroke',p[1]);path.setAttribute('stroke-width','1.5');
+    path.setAttribute('stroke-linecap','round');
+    mk.appendChild(path);defs.appendChild(mk);
+  });
+  svg.appendChild(defs);tbl.appendChild(svg);
+  var tr=tbl.getBoundingClientRect();
+  var vids=visible.map(function(o){return o.id;});
+  DEPS.forEach(function(dep){
+    if(dep.type==='blocks'&&!showB)return;
+    if(dep.type==='trains'&&!showT)return;
+    if(vids.indexOf(dep.fo)<0||vids.indexOf(dep.to)<0)return;
+    var fc=document.getElementById('oslc-'+dep.fo);
+    var tc2=document.getElementById('oslc-'+dep.to);
+    if(!fc||!tc2)return;
+    var fm=MS.filter(function(m){return m.o===dep.fo&&m.l===dep.fl;})[0];
+    var tm=MS.filter(function(m){return m.o===dep.to&&m.l===dep.tl;})[0];
+    if(!fm||!tm)return;
+    var fp=pp(fm.d),tp=pp(tm.d);if(fp===null||tp===null)return;
+    var fr=fc.getBoundingClientRect(),trc=tc2.getBoundingClientRect();
+    var x1=fr.left+(fp/100)*fr.width-tr.left, y1=fr.top+fr.height/2-tr.top;
+    var x2=trc.left+(tp/100)*trc.width-tr.left, y2=trc.top+trc.height/2-tr.top;
+    var col=dep.type==='blocks'?'#ef4444':'#f59e0b';
+    var mx=(x1+x2)/2;
+    var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d','M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2);
+    path.setAttribute('fill','none');path.setAttribute('stroke',col);
+    path.setAttribute('stroke-width','1.5');
+    path.setAttribute('stroke-dasharray',dep.type==='trains'?'4 3':'none');
+    path.setAttribute('opacity','0.7');
+    path.setAttribute('marker-end','url(#osl-mk-'+dep.type+')');
+    svg.appendChild(path);
+  });
+}
+
+window.oslTip=function(e,enc){
+  try{
+    var d=JSON.parse(decodeURIComponent(enc));
+    var col=SC[d.s]||'#9ca3af';
+    var tip=document.getElementById('osl-tip');
+    tip.innerHTML='<div class="osl-tip-title">'+d.l+'</div>'
+      +'<div class="osl-tip-row"><span style="width:8px;height:8px;border-radius:50%;background:'+col+';display:inline-block;flex-shrink:0"></span>'+d.s+'</div>'
+      +'<div class="osl-tip-row">'+d.d+'</div>'
+      +'<div class="osl-tip-row">'+d.dr+'</div>'
+      +'<div class="osl-tip-row" style="color:#9ca3af;font-size:10px">'+d.o+'</div>';
+    tip.style.display='block';
+    tip.style.left=(e.clientX+14)+'px';
+    tip.style.top=(e.clientY-10)+'px';
+  }catch(err){}
+};
+window.oslHide=function(){document.getElementById('osl-tip').style.display='none';};
+document.addEventListener('mousemove',function(e){
+  var t=document.getElementById('osl-tip');
+  if(t.style.display!=='none'){t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY-10)+'px';}
+});
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',oslRender);
+}else{oslRender();}
+})();
+</script>
+<!-- ============================================================
+  END OUTPUT SWIM LANE
+  ============================================================ -->
 </body>
 </html>
