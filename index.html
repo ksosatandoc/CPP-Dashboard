@@ -1,943 +1,942 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Career Pipeline Program — PMO Dashboard · Intuit for Education</title>
-<style>
-:root{
-  --bg:#ffffff;--bg2:#f9fafb;--t1:#111827;--t2:#6b7280;
-  --b1:rgba(0,0,0,0.08);--b2:rgba(0,0,0,0.13);
-  --dbg:#fef2f2;--dt:#dc2626;--db:#fecaca;
-  --wbg:#fffbeb;--wt:#d97706;--wb:#fde68a;
-  --sbg:#f0fdf4;--st:#15803d;--sb:#bbf7d0;
-  --ibg:#eff6ff;--it:#1d4ed8;--ib:#bfdbfe;
-  --r1:8px;--r2:12px;
-  --ff:'Avenir Next','Segoe UI',system-ui,-apple-system,sans-serif;
-}
-@media(prefers-color-scheme:dark){
-  :root{--bg:#111827;--bg2:#1f2937;--t1:#f9fafb;--t2:#9ca3af;
-  --b1:rgba(255,255,255,0.08);--b2:rgba(255,255,255,0.13);
-  --dbg:#450a0a;--dt:#f87171;--db:#7f1d1d;
-  --wbg:#451a03;--wt:#fbbf24;--wb:#78350f;
-  --sbg:#052e16;--st:#4ade80;--sb:#14532d;
-  --ibg:#1e3a5f;--it:#60a5fa;--ib:#1d4ed8;}
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100vh;background:var(--bg);font-family:var(--ff)}
-.dash{background:var(--bg)}
-.hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:.5px solid var(--b1);flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:8px}
-.bbar{width:3px;height:28px;background:#236CFF;border-radius:2px}
-.bey{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
-.bnm{font-size:14px;font-weight:500;color:var(--t1)}
-.bsub{font-size:10px;color:var(--t2);margin-top:1px}
-.stats{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.sp{padding:5px 10px;border-radius:var(--r1);border:.5px solid var(--b2);text-align:center;min-width:60px}
-.sp-n{font-size:18px;font-weight:500;line-height:1}
-.sp-l{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);margin-top:1px}
-.sp.d{background:var(--dbg);border-color:var(--db)}.sp.d .sp-n{color:var(--dt)}
-.sp.w{background:var(--wbg);border-color:var(--wb)}.sp.w .sp-n{color:var(--wt)}
-.sp.s{background:var(--sbg);border-color:var(--sb)}.sp.s .sp-n{color:var(--st)}
-.sp.i{background:var(--ibg);border-color:var(--ib)}.sp.i .sp-n{color:var(--it)}
-.btn{padding:5px 11px;font-size:12px;font-weight:500;background:#236CFF;color:#fff;border:none;border-radius:var(--r1);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.nbar{padding:5px 14px;font-size:10px;color:var(--t2);background:var(--bg2);border-bottom:.5px solid var(--b1);display:none;align-items:center;gap:6px}
-.nbar.show{display:flex}
-.nbar-x{margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;color:var(--t2)}
-.rch{padding:10px 14px 8px;border-bottom:.5px solid var(--b1)}
-.rch-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px}
-.rch-ttl{font-size:11px;font-weight:500;color:var(--t1)}
-.rch-meta{display:flex;gap:14px;flex-wrap:wrap}
-.rch-m{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2)}
-.dtw-wrap{border-bottom:.5px solid var(--b1)}
-.dtw-hdr{padding:6px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--bg2);user-select:none}
-.dtw-ht{font-size:11px;font-weight:500;color:var(--t1)}
-.dtw-badge{font-size:10px;font-weight:500;padding:1px 7px;border-radius:99px}
-.dtw-chev{margin-left:auto;font-size:14px;color:var(--t2);transition:transform .2s;display:inline-block}
-.dtw-grid{padding:5px 14px 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:2px 12px}
-.dtw-item{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:.5px solid var(--b1)}
-.dtw-dt{font-size:9px;font-weight:500;padding:2px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0}
-.dtw-nm{font-size:11px;color:var(--t1);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dtw-ow{font-size:10px;color:var(--t2);white-space:nowrap;flex-shrink:0}
-.dtw-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ctrls{padding:7px 14px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid var(--b1);flex-wrap:wrap}
-.vg{display:flex;gap:3px;background:var(--bg2);border-radius:var(--r1);padding:3px}
-.bv{padding:3px 9px;font-size:11px;font-weight:500;border:none;border-radius:5px;cursor:pointer;background:transparent;color:var(--t2);transition:all .15s;user-select:none}
-.bv.on{background:#236CFF;color:#fff}
-.bt{padding:3px 8px;font-size:10px;font-weight:500;border:.5px solid var(--b1);border-radius:var(--r1);cursor:pointer;background:var(--bg);color:var(--t2);user-select:none}
-.bt.on{color:#fff;border-color:transparent}
-.sep{width:1px;height:20px;background:var(--b1);flex-shrink:0}
-.tl-wrap{display:flex;overflow:hidden}
-.tl-lbls{width:148px;flex-shrink:0;border-right:.5px solid var(--b1);padding-top:34px}
-.tl-lbl{height:64px;display:flex;flex-direction:column;justify-content:center;padding:0 10px;gap:2px;border-bottom:.5px solid var(--b1)}
-.tl-lr{display:flex;align-items:center;gap:5px}
-.tl-ld{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.tl-ln{font-size:10px;font-weight:500;color:var(--t2);line-height:1.2;flex:1;min-width:0}
-.tl-lc{font-size:9px;color:var(--t2);white-space:nowrap}
-.hbar{height:3px;border-radius:99px;background:var(--b1);overflow:hidden}
-.hbar-f{height:100%;border-radius:99px}
-.hbar-s{font-size:9px;color:var(--t2);line-height:1}
-.tl-sc{flex:1;overflow-x:auto;overflow-y:hidden}
-.tl-in{position:relative;width:4880px}
-.mhdr{height:34px;position:relative;border-bottom:.5px solid var(--b2);background:var(--bg2)}
-.mlbl{position:absolute;top:0;height:100%;display:flex;align-items:center;padding-left:5px;font-size:8px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
-.mline{position:absolute;top:0;bottom:0;width:.5px;background:var(--b2)}
-.wline{position:absolute;top:0;bottom:0;width:.5px;background:var(--b1);opacity:.4}
-.tbadge{position:absolute;top:3px;font-size:8px;font-weight:500;color:#236CFF;text-transform:uppercase;letter-spacing:.08em;transform:translateX(-50%);white-space:nowrap}
-.btsb{position:absolute;top:3px;font-size:8px;font-weight:500;color:#2F9E44;text-transform:uppercase;letter-spacing:.08em;transform:translateX(-50%);white-space:nowrap}
-.rows{position:relative}
-.vline{position:absolute;top:0;bottom:0;pointer-events:none}
-.today-line{position:absolute;top:0;bottom:0;width:1.5px;background:#236CFF;z-index:5;pointer-events:none}
-.bts-line{position:absolute;top:0;bottom:0;border-left:1.5px dashed #2F9E44;z-index:5;pointer-events:none}
-.bts-box{position:absolute;top:0;bottom:0;background:rgba(47,158,68,.04);z-index:1;pointer-events:none}
-.hl-box{position:absolute;top:0;bottom:0;background:rgba(35,108,255,.04);z-index:1;pointer-events:none}
-.trow{height:64px;position:relative;border-bottom:.5px solid var(--b1)}
-.trow-base{position:absolute;left:0;right:0;top:50%;height:1px;transform:translateY(-50%);opacity:.12}
-.mdot{position:absolute;cursor:pointer;transform:translate(-50%,-50%);border:2px solid;border-radius:50%;transition:transform .12s;z-index:6}
-.mdot:hover,.mdot.sel{transform:translate(-50%,-50%) scale(1.6);z-index:9}
-.mdot.ev{border-radius:3px;transform:translate(-50%,-50%) rotate(45deg)}
-.mdot.ev:hover,.mdot.ev.sel{transform:translate(-50%,-50%) rotate(45deg) scale(1.5)}
-.lgd{padding:7px 14px;border-top:.5px solid var(--b1);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t2)}
-.ld{width:9px;height:9px;border-radius:50%;border:2px solid;flex-shrink:0}
-.lbar{width:1.5px;height:12px;flex-shrink:0}
-.dc{margin:0 14px 14px;border:.5px solid var(--b2);border-radius:var(--r2);background:var(--bg);padding:12px 14px;display:none}
-.dc.show{display:block}
-.dch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
-.dct{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--t2);margin-bottom:3px}
-.dcn{font-size:14px;font-weight:500;color:var(--t1)}
-.dcx{background:none;border:none;cursor:pointer;font-size:17px;color:var(--t2);line-height:1;padding:0 3px}
-.dcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.dcf label{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);display:block;margin-bottom:2px}
-.dcf span{font-size:12px;color:var(--t1)}
-.dcb{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;margin-bottom:9px}
-.dcno{margin-top:9px;padding-top:9px;border-top:.5px solid var(--b1);font-size:12px;color:var(--t2);line-height:1.5}
-</style>
-</head>
-<body>
-<div class="dash">
+// ============================================================
+// CAREER PIPELINE PROGRAM — Google Sheets → Airtable Sync
+// VERSION: 4.3.2 — Archive orphan records utility
+// ============================================================
+// CHANGES FROM 4.3.1:
+//
+//   1. NEW UTILITY: runArchiveOrphans()
+//      — Reads all Airtable record IDs from column I of the
+//        Action Items sheet (the source of truth)
+//      — Fetches ALL records from Airtable Action Items table
+//        using paginated API calls (handles 200+ records)
+//      — For each Airtable record whose ID is NOT in the sheet:
+//          • If action item text contains "TEST" or "delete" 
+//            (case-insensitive) → DELETES the record
+//          • All others → marks Status = "Completed"
+//      — Runs in DRY RUN mode by default (logs what it would
+//        do without making any changes)
+//      — Set DRY_RUN = false to execute for real
+//      — Logs a full report: totals for completed, deleted,
+//        skipped, and errors — nothing is silent
+//      — SAFE: never touches records that ARE in the sheet
+//      — ONE-TIME manual utility — never runs automatically
+//
+// ALL OTHER CHANGES CARRIED FORWARD FROM 4.3.1 — unchanged
+// ============================================================
+// BASE:  appehv2531xZ5Icx1 (FINAL Career Pipeline Program FY26-27)
+// SHEET: 1P5pWXHUlh48c09csaKDU90VIcBOQV9dNXCLTzbBHKVg
+// ============================================================
 
-<div class="hdr">
-  <div class="brand"><div class="bbar"></div><div>
-    <div class="bey">Intuit for Education &middot; FY26&ndash;27</div>
-    <div class="bnm">Career Pipeline Program &mdash; PMO Dashboard</div>
-    <div class="bsub">Driver: Karla Moultak &nbsp;&middot;&nbsp; PMO: Kathy Sosa-Tandoc &nbsp;&middot;&nbsp; Approver: Lynn Letukas</div>
-  </div></div>
-  <div class="stats">
-    <div class="sp w" id="pill-bts"><div class="sp-n" id="bts-num">61</div><div class="sp-l">Days to BTS</div></div>
-    <div class="sp w"><div class="sp-n" id="ip-num">0</div><div class="sp-l">In Progress</div></div>
-    <div class="sp d"><div class="sp-n" id="ar-num">0</div><div class="sp-l">Overdue</div></div>
-    <div class="sp s"><div class="sp-n" id="don-num">0</div><div class="sp-l">Complete</div></div>
-    <button class="btn" id="rfbtn">&#8635; Sync Sheets</button>
-  </div>
-</div>
+const AIRTABLE_TOKEN = PropertiesService.getScriptProperties().getProperty('AIRTABLE_PAT');
+const BASE_ID = 'appehv2531xZ5Icx1';
+const SHEET_ID = '1P5pWXHUlh48c09csaKDU90VIcBOQV9dNXCLTzbBHKVg';
 
-<div class="nbar" id="nbar">
-  &#9432; Live sync requires Claude with Google Drive connected. Open this dashboard at claude.ai to enable it.
-  <button class="nbar-x" id="nbar-x">&times;</button>
-</div>
+// ── Field type registries ────────────────────────────────────
 
-<div class="rch">
-  <div class="rch-hdr">
-    <span class="rch-ttl">Output progress &mdash; milestones complete per program output</span>
-    <div class="rch-meta">
-      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#2F9E44;vertical-align:middle;border-radius:2px"></span> Done</div>
-      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#E67700;vertical-align:middle;border-radius:2px"></span> In Progress</div>
-      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#C92A2A;vertical-align:middle;border-radius:2px"></span> Overdue</div>
-      <div class="rch-m"><span style="display:inline-block;width:12px;height:10px;background:#e5e7eb;border:.5px solid #d1d5db;vertical-align:middle;border-radius:2px"></span> Not Started</div>
-    </div>
-  </div>
-  <div style="height:158px;position:relative"><canvas id="cppChart" style="display:block;width:100%;height:158px"></canvas></div>
-</div>
-
-<div class="dtw-wrap">
-  <div class="dtw-hdr" id="dtw-hdr">
-    <span>&#128197;</span>
-    <span class="dtw-ht">Due this week &amp; overdue</span>
-    <span class="dtw-badge" id="dtw-badge">&mdash;</span>
-    <span class="dtw-chev" id="dtw-chev">&#9660;</span>
-  </div>
-  <div id="dtw-grid" class="dtw-grid"></div>
-</div>
-
-<div class="ctrls">
-  <div class="vg" id="view-grp">
-    <button class="bv on" data-view="next14">&#9889; Next 14 Days</button>
-    <button class="bv" data-view="active">&#128260; Active</button>
-    <button class="bv" data-view="overdue">&#128680; Overdue</button>
-    <button class="bv" data-view="all">&#128197; Full Timeline</button>
-  </div>
-  <div class="sep"></div>
-  <div class="vg" id="group-grp">
-    <button class="bv on" data-group="track">By Track</button>
-    <button class="bv" data-group="owner">By Owner</button>
-  </div>
-  <div id="track-btns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
-</div>
-
-<div class="tl-wrap">
-  <div class="tl-lbls" id="tl-lbls"></div>
-  <div class="tl-sc" id="tl-sc">
-    <div class="tl-in" id="tl-in">
-      <div class="mhdr" id="mhdr"></div>
-      <div class="rows" id="rows"></div>
-    </div>
-  </div>
-</div>
-
-<div class="lgd">
-  <span style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--t2)">Legend</span>
-  <div class="li"><div class="ld" style="background:#2F9E44;border-color:#2F9E44"></div>Complete</div>
-  <div class="li"><div class="ld" style="background:#E67700;border-color:#E67700"></div>In Progress</div>
-  <div class="li"><div class="ld" style="background:transparent;border-color:#1971C2"></div>Not Started</div>
-  <div class="li"><div class="ld" style="background:#C92A2A;border-color:#C92A2A"></div>Overdue</div>
-  <div class="li"><div class="ld" style="background:#236CFF;border-color:#236CFF;border-radius:3px;transform:rotate(45deg)"></div>Key Milestone</div>
-  <div class="li"><div class="lbar" style="background:#236CFF"></div>Today</div>
-  <div class="li"><div class="lbar" style="border-left:1.5px dashed #2F9E44;width:0"></div>BTS Aug 1</div>
-  <span style="margin-left:auto;font-size:10px;color:var(--t2)">Click any dot for details &middot; Scroll to navigate</span>
-</div>
-
-<div class="dc" id="detail-card">
-  <div class="dch"><div><div class="dct" id="d-track"></div><div class="dcn" id="d-title"></div></div><button class="dcx" id="dc-close">&times;</button></div>
-  <div id="d-badge" class="dcb"></div>
-  <div class="dcg" id="d-grid"></div>
-  <div class="dcno" id="d-notes" style="display:none"></div>
-</div>
-
-</div>
-<script>
-const TW=4800,T0=new Date(2026,3,1),T1=new Date(2027,4,1);
-const TODAY=new Date(2026,5,1),BTS=new Date(2026,7,1);
-const SPAN=T1-T0,ROW_H=64;
-const DBTS=Math.round((BTS-TODAY)/86400000);
-
-function dx(s){if(!s)return -1;const d=new Date(s+'T00:00:00');if(isNaN(d))return -1;return Math.max(0,Math.min(TW,Math.round(((d-T0)/SPAN)*TW)));}
-const TX=dx('2026-06-01'),BX=dx('2026-08-01');
-const SC={done:'#2F9E44',prog:'#E67700',future:'#1971C2',atrisk:'#C92A2A',event:'#236CFF'};
-const SL={done:'Complete',prog:'In Progress',future:'Not Started',atrisk:'Overdue / At Risk',event:'Key Milestone'};
-
-const TRACKS=[
-  {id:'program',label:'Program Oversight',color:'#534AB7'},
-  {id:'curriculum',label:'Curriculum',color:'#0F6E56'},
-  {id:'product',label:'Product',color:'#185FA5'},
-  {id:'highered',label:'Higher Ed',color:'#3B6D11'},
-  {id:'propartner',label:'ProPartner',color:'#D85A30'},
-  {id:'educatorpd',label:'Educator PD',color:'#993556'},
-  {id:'gtm',label:'GTM & Events',color:'#BA7517'},
-  {id:'efficacy',label:'Efficacy',color:'#5F5E5A'},
-];
-
-const MS=[
-  // PROGRAM OVERSIGHT
-  {id:'po1',tr:'program',t:'Budget finalized',due:'2026-04-15',o:'Karla Moultak',st:'done'},
-  {id:'po2',tr:'program',t:'Program Op Mechs established',due:'2026-04-15',o:'Karla Moultak',st:'done'},
-  {id:'po3',tr:'program',t:'DACE + R&Rs set',due:'2026-04-23',o:'Karla Moultak',st:'done'},
-  {id:'po4',tr:'program',t:'Stakeholder Journey Maps — First Draft',due:'2026-05-10',o:'Karla Moultak',st:'done',n:'Drafts complete, shared with team for feedback'},
-  {id:'po5',tr:'program',t:'Journey Maps finalized',due:'2026-06-05',o:'Karla Moultak',st:'future'},
-  {id:'po6',tr:'program',t:'Contracts approved — Premier CAS',due:'2026-06-01',o:'Lynn Letukas',st:'future'},
-  // QBEP PATHWAY
-  {id:'q1',tr:'product',t:'QB Express delivery date finalized',due:'2026-05-15',o:'Jillian Moskovitz',st:'prog',n:'Jillian reaching out to QB Express on timeline for updated curriculum'},
-  {id:'q2',tr:'gtm',t:'Draft messaging for QBEP landing page & post login',due:'2026-06-01',o:'Katie / Caleb',st:'future'},
-  {id:'q3',tr:'gtm',t:'Finalize QBEP landing page & post login — send for approval',due:'2026-06-12',o:'Katie Rosenberg',st:'future'},
-  {id:'q4',tr:'gtm',t:'GTM updates QBEP landing page',due:'2026-07-01',o:'Katie Rosenberg',st:'future'},
-  {id:'q5',tr:'product',t:'Product updates content on QBEP post login page',due:'2026-07-15',o:'Bella Rozenkrants',st:'future'},
-  {id:'q6',tr:'product',t:'KEY MILESTONE: LIVE on QBEP',due:'2026-07-31',o:'Bella Rozenkrants',st:'event',n:'QBEP post-login live with Career Pipeline certification pathway'},
-  // CAS CURRICULUM PT 2
-  {id:'cc1',tr:'curriculum',t:'Confirm QBEP v2 content architecture with Product',due:'2026-05-31',o:'Bella Rozenkrants',st:'prog'},
-  {id:'cc2',tr:'curriculum',t:'Net-new modular build scoped with updated QB curriculum',due:'2026-05-31',o:'Jillian / Bella',st:'atrisk',n:'Not started — due 5/31'},
-  {id:'cc3',tr:'curriculum',t:'Curriculum partner engaged for Phase 2 scope',due:'2026-06-15',o:'Jillian Moskovitz',st:'future'},
-  {id:'cc4',tr:'curriculum',t:'Development begins with curriculum partner',due:'2026-06-15',o:'Jillian Moskovitz',st:'future'},
-  {id:'cc5',tr:'product',t:'QBO sandbox data integration planned',due:'2026-07-01',o:'Bella Rozenkrants',st:'future'},
-  {id:'cc6',tr:'curriculum',t:'Full draft of V3 Almighty curriculum complete',due:'2027-02-15',o:'Jillian Moskovitz',st:'future'},
-  {id:'cc7',tr:'curriculum',t:'KEY MILESTONE: LIVE — Full Modular Curriculum (V3 Almighty)',due:'2027-04-01',o:'Bella Rozenkrants',st:'event',n:'Full modular CAS / QB curriculum live on platform — April 2027 target'},
-  // ACADEMIC RESOURCE HUB
-  {id:'arh1',tr:'gtm',t:'Develop microsite brief (purpose, contents, structure)',due:'2026-05-05',o:'Karla / Katie',st:'prog',n:'Draft in progress; feedback round with track leads in progress'},
-  {id:'arh2',tr:'gtm',t:'Brief approved by track leads',due:'2026-05-20',o:'Lynn / Jaclyn / Caleb',st:'atrisk',n:'Not started — due 5/20'},
-  {id:'arh3',tr:'gtm',t:'Confirm roles/responsibilities for launching Hub',due:'2026-05-20',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/20'},
-  {id:'arh4',tr:'gtm',t:'Content strategy + information architecture finalized',due:'2026-05-31',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/31'},
-  {id:'arh5',tr:'gtm',t:'Website wireframes reviewed',due:'2026-06-20',o:'Katie Rosenberg',st:'future'},
-  {id:'arh6',tr:'gtm',t:'Website draft built + internal review',due:'2026-07-01',o:'Katie Rosenberg',st:'future'},
-  {id:'arh7',tr:'gtm',t:'QA + accessibility review',due:'2026-07-15',o:'Katie Rosenberg',st:'future'},
-  {id:'arh8',tr:'product',t:'KEY MILESTONE: Academic Resource Hub LIVE on I4E',due:'2026-08-01',o:'Bella Rozenkrants',st:'event',n:'I4E microsite — one stop shop for curriculum, certifications, case studies, PD'},
-  // QB EDUCATOR BADGE
-  {id:'epd1',tr:'educatorpd',t:'Align with Emily on Badge goals',due:'2026-05-05',o:'Emily / Karla',st:'done'},
-  {id:'epd2',tr:'educatorpd',t:'Draft Educator Badge brief',due:'2026-05-14',o:'Emily Pressman',st:'done',n:'Sent to team for review'},
-  {id:'epd3',tr:'educatorpd',t:'Emily & Brittany connect on badge + learning objectives',due:'2026-05-18',o:'Emily Pressman',st:'atrisk',n:'Not started — due 5/18'},
-  {id:'epd4',tr:'educatorpd',t:'Draft Badge name',due:'2026-05-20',o:'Emily / Caleb / Jaclyn',st:'atrisk',n:'Not started — due 5/20'},
-  {id:'epd5',tr:'educatorpd',t:'Badge name, criteria & award pathway aligned',due:'2026-05-30',o:'Emily Pressman',st:'atrisk',n:'Needs approval from Lynn & Jaclyn — due 5/30'},
-  {id:'epd6',tr:'educatorpd',t:'Educator PD curriculum built (async modules)',due:'2026-06-15',o:'Emily Pressman',st:'future'},
-  {id:'epd7',tr:'highered',t:'Pilot group identified (Premier campus educators)',due:'2026-06-30',o:'Caleb Tegtmeier',st:'future'},
-  {id:'epd8',tr:'educatorpd',t:'Educator PD tested with pilot group',due:'2026-07-15',o:'Emily Pressman',st:'future'},
-  {id:'epd9',tr:'gtm',t:'Training & award process placed on Hub',due:'2026-08-15',o:'Katie Rosenberg',st:'future'},
-  {id:'epd10',tr:'educatorpd',t:'KEY MILESTONE: QB Educator Badge Program LIVE',due:'2026-08-01',o:'Emily / Bella',st:'event',n:'Educator badge program live — criteria, PD curriculum, and award pathway active'},
-  // 100 CAS CAMPUSES
-  {id:'cas1',tr:'highered',t:'Outreach strategy finalized',due:'2026-04-15',o:'Caleb Tegtmeier',st:'done'},
-  {id:'cas2',tr:'highered',t:'1-pager for external campus pitch developed',due:'2026-05-03',o:'Caleb / Katie',st:'done'},
-  {id:'cas3',tr:'highered',t:'Approve 1-pager (Legal + Lynn)',due:'2026-05-15',o:'Lynn Letukas',st:'prog',n:'Draft with legal for review'},
-  {id:'cas4',tr:'program',t:'E2E program experience map built',due:'2026-05-03',o:'Caleb / Karla',st:'prog',n:'Drafts complete, shared with team for feedback'},
-  {id:'cas5',tr:'highered',t:'Develop plan for implementation support',due:'2026-07-01',o:'Caleb / Karla',st:'future',n:'Broad partnership acquisition and management for scaled offering'},
-  {id:'cas6',tr:'highered',t:'Educators onboarded to badge PD program (100 campuses)',due:'2026-08-01',o:'Emily / Caleb',st:'future'},
-  {id:'cas7',tr:'highered',t:'KEY MILESTONE: 100 CAS Campuses Enrolled',due:'2027-04-01',o:'Caleb Tegtmeier',st:'event',n:'FY27 goal — 100 institutions enrolled in Career Pipeline program'},
-  // 5 PREMIER CAS CAMPUSES
-  {id:'prem1',tr:'highered',t:'5-10 Premier campus targets identified',due:'2026-04-15',o:'Caleb Tegtmeier',st:'done',n:'UVU confirmed as anchor campus'},
-  {id:'prem2',tr:'highered',t:'Outreach initiated to Premier campuses',due:'2026-05-01',o:'Caleb Tegtmeier',st:'done'},
-  {id:'prem3',tr:'highered',t:'Partnership terms defined (Premier benefits package)',due:'2026-05-25',o:'Caleb / Giovanni',st:'prog'},
-  {id:'prem4',tr:'propartner',t:'Contracts drafted',due:'2026-05-25',o:'Giovanni / Caleb',st:'prog',n:'In progress'},
-  {id:'prem5',tr:'highered',t:'Outline CAS Premier Campus user journey',due:'2026-05-25',o:'Karla / Caleb',st:'atrisk',n:'Not started — due 5/25. Includes roadmap for ProPartner engagements.'},
-  {id:'prem6',tr:'highered',t:'KEY MILESTONE: All 5 Premier CAS Contracts Signed',due:'2026-07-15',o:'Caleb Tegtmeier',st:'event',n:'5 Intuit CAS Campuses signed by July — guiding principles: institution type, engagement, geographic diversity'},
-  {id:'prem7',tr:'highered',t:'Educators onboarded to badge PD (Premier campuses)',due:'2026-08-01',o:'Emily / Caleb',st:'future'},
-  {id:'prem8',tr:'propartner',t:'Outline CAS Lab next steps',due:'2026-10-01',o:'Jaclyn Anku',st:'future',n:'CAS Lab: ProPartner-led mentorship and live client work — applies where entrepreneurship programs exist'},
-  {id:'prem9',tr:'highered',t:'Outline Internship next steps (Premier campuses)',due:'2026-10-01',o:'Caleb Tegtmeier',st:'future'},
-  // 3,800 CERTIFICATIONS
-  {id:'cert1',tr:'highered',t:'Map E2E certification journey',due:'2026-05-15',o:'Karla / Caleb',st:'prog'},
-  {id:'cert2',tr:'highered',t:'BTS outreach / awareness campaign developed',due:'2026-05-01',o:'Caleb / Jillian',st:'atrisk',n:'Not started — due 5/1'},
-  {id:'cert3',tr:'highered',t:'Mid-year certification count reported',due:'2027-01-01',o:'Caleb Tegtmeier',st:'future'},
-  {id:'cert4',tr:'highered',t:'KEY MILESTONE: 3,800 Student Certifications',due:'2027-04-01',o:'Caleb / Jillian',st:'event',n:'FY27 goal — 3,800 students certified (2.5x YoY growth). ProAdvisor QB Level 1.'},
-  // PROPARTNER INTERNSHIPS
-  {id:'int1',tr:'propartner',t:'Outline internship plan with ProPartner teams',due:'2026-05-15',o:'James Lee',st:'prog'},
-  {id:'int2',tr:'propartner',t:'Define student qualification criteria',due:'2026-05-30',o:'James Lee',st:'atrisk',n:'Not started — due 5/30. Cert only, or cert + CAS modules?'},
-  {id:'int3',tr:'propartner',t:'E2E experience map defines placement process',due:'2026-06-05',o:'James Lee',st:'future'},
-  {id:'int4',tr:'propartner',t:'Determine Academic Resource Hub connection',due:'2026-06-05',o:'James Lee',st:'future'},
-  {id:'int5',tr:'propartner',t:'Firm outreach begins',due:'2026-08-15',o:'James Lee',st:'future'},
-  {id:'int6',tr:'propartner',t:'Partnership agreements scoped',due:'2026-10-01',o:'James Lee',st:'future'},
-  {id:'int7',tr:'propartner',t:'Agreements signed; student matching begins',due:'2027-01-05',o:'James Lee',st:'future'},
-  {id:'int8',tr:'propartner',t:'First cohort matched and placed',due:'2027-01-15',o:'James Lee',st:'future'},
-  {id:'int9',tr:'propartner',t:'KEY MILESTONE: 25 ProPartner Students Placed',due:'2027-04-01',o:'James Lee',st:'event',n:'25 students placed with ProPartner firms — FY27 goal'},
-  // 100 PROPARTNERS ENGAGED
-  {id:'pp1',tr:'propartner',t:'Develop brief: value prop + program components',due:'2026-05-15',o:'Jaclyn Anku',st:'prog',n:'Includes what "engaged" means: mentor / guest lecturer / hiring?'},
-  {id:'pp2',tr:'propartner',t:'KEY DELIVERABLE: QB Partner Plan v1 Complete',due:'2026-05-25',o:'Jaclyn / Lynn',st:'atrisk',n:'Not started — due 5/25. Critical for unlocking ProPartner track.'},
-  {id:'pp3',tr:'propartner',t:'Identify ProPartner targets aligned to CAS campuses',due:'2026-07-15',o:'Jaclyn Anku',st:'future'},
-  {id:'pp4',tr:'propartner',t:'First ProPartners paired with Premier CAS campuses',due:'2026-08-01',o:'Jaclyn Anku',st:'future'},
-  {id:'pp5',tr:'propartner',t:'KEY MILESTONE: 100 ProPartners Linked with Institutions',due:'2027-04-01',o:'Jaclyn Anku',st:'event',n:'100 ProAdvisors engaged as mentors, guest lecturers, or hiring firms'},
-  // GTM & EVENTS
-  {id:'g1',tr:'gtm',t:'Messaging Playbook drafted',due:'2026-05-05',o:'Katie Rosenberg',st:'done',n:'Source of truth for all downstream briefs and activations'},
-  {id:'g2',tr:'gtm',t:'Intuit Connect Draft Brief',due:'2026-05-05',o:'Jaclyn Anku',st:'done'},
-  {id:'g3',tr:'gtm',t:'Messaging Playbook approved',due:'2026-05-19',o:'Lynn / Dave / Jaclyn',st:'done'},
-  {id:'g4',tr:'gtm',t:'Better Together Tour resourcing set',due:'2026-05-15',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/15. First event: Atlanta 5/28. Gallery walk + Brittany Brown co-speaker.'},
-  {id:'g5',tr:'gtm',t:'UVU case study content captured + production shoot',due:'2026-05-25',o:'Katie Rosenberg',st:'atrisk',n:'Not started — due 5/25'},
-  {id:'g6',tr:'propartner',t:'Partnerships strategy drafted',due:'2026-05-25',o:'Giovanni Dubois',st:'atrisk',n:'Not started — due 5/25'},
-  {id:'g7',tr:'gtm',t:'Intuit Connect — attendee invites sent',due:'2026-05-30',o:'Katie / Caleb',st:'atrisk',n:'Not started — due 5/30'},
-  {id:'g8',tr:'gtm',t:'Partnerships strategy approved',due:'2026-06-05',o:'Lynn Letukas',st:'future'},
-  {id:'g9',tr:'gtm',t:'BTS Plan locked',due:'2026-06-15',o:'Katie Rosenberg',st:'future'},
-  {id:'g10',tr:'gtm',t:'UVU Case Study published on Resource Hub',due:'2026-07-01',o:'Katie / Bella',st:'future'},
-  {id:'g11',tr:'gtm',t:'AAA Conference',due:'2026-08-01',o:'Katie / Giovanni',st:'event',n:'KEY EVENT — $4,500 booth. Develop conference strategy with Giovanni.'},
-  {id:'g12',tr:'gtm',t:'Post-BTS campaign: highlight early results',due:'2026-09-05',o:'Katie Rosenberg',st:'future'},
-  {id:'g13',tr:'gtm',t:'Intuit Connect — Pre-Con CAS Educator Roundtable',due:'2026-10-25',o:'Jaclyn Anku',st:'event',n:'KEY EVENT — CAS Campus pre-conference roundtable. 1pm–5pm. Consider on-stage CAS Campus announcement moment.'},
-  {id:'g14',tr:'gtm',t:'Case Study (February highlight)',due:'2027-02-25',o:'Katie Rosenberg',st:'future',n:'Highlights new curriculum and product experience in practice'},
-  // EFFICACY
-  {id:'eff1',tr:'efficacy',t:'Carol reviews CPP materials; outlines efficacy options',due:'2026-06-01',o:'Carol Lee',st:'prog',n:'Efficacy outline complete — will finalize once program components are locked'},
-  {id:'eff2',tr:'efficacy',t:'Finalize efficacy study outline',due:'2026-06-01',o:'Carol Lee',st:'prog',n:'Scope admin and supervisor survey extension'},
-];
-
-// Owner colors
-const OMAP={'Karla Moultak':'Karla M.','Karla / Katie':'Karla M.','Karla / Caleb':'Karla M.','Enza Pollifrone':'Enza P.','Lynn Letukas':'Lynn L.','Lynn / Jaclyn / Caleb':'Lynn L.','Lynn / Dave / Jaclyn':'Lynn L.','Lynn / Caleb':'Lynn L.','Katie Rosenberg':'Katie R.','Katie / Caleb':'Katie R.','Katie / Bella':'Katie R.','Caleb Tegtmeier':'Caleb T.','Caleb / Giovanni':'Caleb T.','Caleb / Karla':'Caleb T.','Caleb / Jillian':'Caleb T.','Caleb / Katie':'Katie R.','Jillian Moskovitz':'Jillian M.','Jillian / Bella':'Jillian M.','Bella Rozenkrants':'Bella R.','Emily Pressman':'Emily P.','Emily / Karla':'Emily P.','Emily / Caleb':'Emily P.','Emily / Bella':'Emily P.','Jaclyn Anku':'Jaclyn A.','Jaclyn / Lynn':'Jaclyn A.','Giovanni Dubois':'Giovanni D.','Giovanni / Caleb':'Giovanni D.','James Lee':'James L.','Carol Lee':'Carol L.'};
-const OCOLORS={'Karla M.':'#534AB7','Lynn L.':'#185FA5','Katie R.':'#BA7517','Caleb T.':'#3B6D11','Jillian M.':'#0F6E56','Bella R.':'#185FA5','Emily P.':'#993556','Jaclyn A.':'#D85A30','Giovanni D.':'#C76B00','James L.':'#5F5E5A','Carol L.':'#7048A8','Enza P.':'#534AB7'};
-function normO(r){if(!r)return'Unassigned';return OMAP[r]||(r.split(/[/,]+/)[0].trim());}
-
-// Output progress data for canvas chart
-const OUTPUTS=[
-  {name:'QBEP Pathway',done:0,prog:1,atrisk:0,future:4},
-  {name:'CAS Curriculum',done:0,prog:1,atrisk:1,future:4},
-  {name:'Resource Hub',done:0,prog:1,atrisk:3,future:3},
-  {name:'Educator Badge',done:2,prog:0,atrisk:3,future:4},
-  {name:'100 CAS Campuses',done:2,prog:2,atrisk:0,future:2},
-  {name:'5 Premier CAS',done:2,prog:2,atrisk:1,future:1},
-  {name:'ProPartner',done:0,prog:2,atrisk:2,future:8},
-  {name:'GTM & Events',done:3,prog:0,atrisk:4,future:5},
-];
-
-let viewMode='next14',trackFilter='all',groupBy='track',selId=null,dtwOpen=true;
-
-const MONTHS=[
-  {l:'Apr 26',d:'2026-04-01'},{l:'May',d:'2026-05-01'},{l:'Jun',d:'2026-06-01'},
-  {l:'Jul',d:'2026-07-01'},{l:'Aug',d:'2026-08-01'},{l:'Sep',d:'2026-09-01'},
-  {l:'Oct',d:'2026-10-01'},{l:'Nov',d:'2026-11-01'},{l:'Dec',d:'2026-12-01'},
-  {l:'Jan 27',d:'2027-01-01'},{l:'Feb',d:'2027-02-01'},{l:'Mar',d:'2027-03-01'},
-  {l:'Apr 27',d:'2027-04-01'},
-];
-
-function getWeekTicks(){const t=[],d=new Date(2026,3,1);while(d<=T1){t.push(new Date(d));d.setDate(d.getDate()+7);}return t;}
-
-function assignLanes(items){
-  const s=[...items].sort(function(a,b){return dx(a.due)-dx(b.due);});
-  const ends=[0,0,0],PAD=22;
-  return s.map(function(m){const ix=dx(m.due);let lane=2;for(let i=0;i<3;i++){if(ix>=ends[i]+PAD){lane=i;break;}}ends[lane]=ix+PAD;return Object.assign({},m,{lane:lane});});
-}
-
-function getFiltered(){
-  const d14=new Date(2026,5,15);
-  return MS.filter(function(m){
-    if(trackFilter!=='all'&&m.tr!==trackFilter)return false;
-    const d=new Date(m.due+'T00:00:00');
-    if(viewMode==='all')return true;
-    if(viewMode==='overdue')return m.st==='atrisk';
-    if(viewMode==='active')return['prog','atrisk','event'].includes(m.st);
-    if(viewMode==='next14'){if(m.st==='event'||m.st==='atrisk'||m.st==='prog')return true;return d>=TODAY&&d<=d14;}
-    return true;
-  });
-}
-
-function trackStats(id){
-  const items=MS.filter(function(m){return m.tr===id;});
-  const total=items.filter(function(m){return m.st!=='event';}).length;
-  const done=items.filter(function(m){return m.st==='done';}).length;
-  const risk=items.filter(function(m){return m.st==='atrisk';}).length;
-  return{done:done,total:total,risk:risk,pct:total?Math.round(done/total*100):0};
-}
-
-function getOwnerRows(filtered){
-  const om={};
-  filtered.forEach(function(m){const o=normO(m.o);if(!om[o])om[o]=[];om[o].push(m);});
-  return Object.entries(om).map(function(e){return{name:e[0],items:e[1],color:OCOLORS[e[0]]||'#666',id:e[0]};}).sort(function(a,b){return b.items.filter(function(m){return['prog','atrisk'].includes(m.st);}).length-a.items.filter(function(m){return['prog','atrisk'].includes(m.st);}).length;});
-}
-
-function addRow(lbls,rows,def,isOwner){
-  const LANE_Y=[Math.round(ROW_H*.28),Math.round(ROW_H*.5),Math.round(ROW_H*.72)];
-  const lbl=document.createElement('div');lbl.className='tl-lbl';lbl.style.opacity=def.items.length?'1':'0.3';
-  if(isOwner){
-    const risk=def.items.filter(function(m){return m.st==='atrisk';}).length;
-    const prog=def.items.filter(function(m){return m.st==='prog';}).length;
-    const done=def.items.filter(function(m){return m.st==='done';}).length;
-    const badge=risk>0?'<span style="color:#C92A2A">'+risk+' overdue</span>':prog>0?'<span style="color:#E67700">'+prog+' in prog.</span>':'<span>'+done+' done</span>';
-    lbl.innerHTML='<div class="tl-lr"><div class="tl-ld" style="background:'+def.color+'"></div><span class="tl-ln">'+def.name+'</span><span class="tl-lc">'+def.items.length+'</span></div><div class="hbar-s">'+badge+'</div>';
-  }else{
-    const st=trackStats(def.id);
-    const bc=st.risk>0?'#C92A2A':st.pct>70?'#2F9E44':st.pct>40?'#E67700':'#1971C2';
-    const statsTxt=st.risk>0?'<span style="color:#C92A2A">'+st.risk+' overdue</span>':st.pct+'% done';
-    lbl.innerHTML='<div class="tl-lr"><div class="tl-ld" style="background:'+def.color+'"></div><span class="tl-ln">'+def.label+'</span><span class="tl-lc">'+st.done+'/'+st.total+'</span></div><div class="hbar"><div class="hbar-f" style="width:'+st.pct+'%;background:'+bc+'"></div></div><div class="hbar-s">'+statsTxt+'</div>';
-  }
-  lbls.appendChild(lbl);
-
-  const row=document.createElement('div');row.className='trow';
-  const base=document.createElement('div');base.className='trow-base';base.style.background=def.color;row.appendChild(base);
-
-  assignLanes(def.items).forEach(function(m){
-    const x=dx(m.due);if(x<0)return;
-    const sc=SC[m.st]||def.color;
-    const isEvent=m.st==='event',isDone=m.st==='done';
-    const sz=isEvent?15:11;
-    const filled=isDone||m.st==='prog'||m.st==='atrisk'||isEvent;
-    const dot=document.createElement('div');
-    dot.className='mdot'+(isEvent?' ev':'')+(selId===m.id?' sel':'');
-    dot.style.left=x+'px';dot.style.top=(LANE_Y[m.lane]||LANE_Y[1])+'px';
-    dot.style.width=sz+'px';dot.style.height=sz+'px';
-    dot.style.borderColor=sc;dot.style.background=filled?sc:'transparent';
-    dot.title=m.t+' | '+m.o+' | '+m.due;
-    dot.addEventListener('click',function(){showDetail(m.id);});
-    row.appendChild(dot);
-  });
-  rows.appendChild(row);
-}
-
-function render(){
-  const filtered=getFiltered();
-  document.getElementById('ar-num').textContent=MS.filter(function(m){return m.st==='atrisk';}).length;
-  document.getElementById('ip-num').textContent=MS.filter(function(m){return m.st==='prog';}).length;
-  document.getElementById('don-num').textContent=MS.filter(function(m){return m.st==='done';}).length;
-  document.getElementById('bts-num').textContent=DBTS;
-
-  const lbls=document.getElementById('tl-lbls'),rows=document.getElementById('rows');
-  lbls.innerHTML='';rows.innerHTML='';
-
-  const mhdr=document.getElementById('mhdr');mhdr.innerHTML='';
-  getWeekTicks().forEach(function(wk){
-    const d=document.createElement('div');d.className='wline';d.style.left=dx(wk.toISOString().split('T')[0])+'px';mhdr.appendChild(d);
-  });
-  MONTHS.forEach(function(m){
-    const xp=dx(m.d);
-    const line=document.createElement('div');line.className='mline';line.style.left=xp+'px';mhdr.appendChild(line);
-    const lbl=document.createElement('div');lbl.className='mlbl';lbl.style.left=xp+'px';lbl.textContent=m.l.toUpperCase();mhdr.appendChild(lbl);
-  });
-  const tb=document.createElement('div');tb.className='tbadge';tb.style.left=TX+'px';tb.textContent='Today Jun 1';mhdr.appendChild(tb);
-  const bb=document.createElement('div');bb.className='btsb';bb.style.left=BX+'px';bb.textContent='BTS Aug 1';mhdr.appendChild(bb);
-
-  // BTS highlight box
-  const btsBox=document.createElement('div');btsBox.className='bts-box';btsBox.style.left=dx('2026-07-15')+'px';btsBox.style.width=(BX-dx('2026-07-15'))+'px';rows.appendChild(btsBox);
-
-  if(viewMode==='next14'){
-    const hl=document.createElement('div');hl.className='hl-box';hl.style.left=TX+'px';hl.style.width=(dx('2026-06-15')-TX)+'px';rows.appendChild(hl);
-  }
-  getWeekTicks().forEach(function(wk){
-    const d=document.createElement('div');d.className='vline';d.style.left=dx(wk.toISOString().split('T')[0])+'px';d.style.width='.5px';d.style.background='rgba(0,0,0,0.04)';rows.appendChild(d);
-  });
-  MONTHS.forEach(function(m){
-    const d=document.createElement('div');d.className='vline';d.style.left=dx(m.d)+'px';d.style.width='.5px';d.style.background='rgba(0,0,0,0.1)';rows.appendChild(d);
-  });
-  const tl=document.createElement('div');tl.className='today-line';tl.style.left=TX+'px';rows.appendChild(tl);
-  const btsl=document.createElement('div');btsl.className='bts-line';btsl.style.left=BX+'px';rows.appendChild(btsl);
-
-  if(groupBy==='owner'){
-    getOwnerRows(filtered).forEach(function(def){addRow(lbls,rows,def,true);});
-  }else{
-    TRACKS.forEach(function(tr){
-      const items=filtered.filter(function(m){return m.tr===tr.id;});
-      if(!items.length&&trackFilter!=='all')return;
-      addRow(lbls,rows,Object.assign({},tr,{items:items}),false);
-    });
-  }
-  if(selId){const m=MS.find(function(x){return x.id===selId;});if(m)renderDetail(m);}
-  renderDTW();
-}
-
-function renderDTW(){
-  const end=new Date(2026,5,7);
-  const items=MS.filter(function(m){
-    const d=new Date(m.due+'T00:00:00');
-    return(d>=TODAY&&d<=end&&m.st!=='done'&&m.st!=='event')||m.st==='atrisk';
-  });
-  const unique=items.filter(function(m,i,a){return a.findIndex(function(x){return x.id===m.id;})==i;}).sort(function(a,b){return new Date(a.due)-new Date(b.due);});
-  const risk=unique.filter(function(m){return m.st==='atrisk';}).length;
-  const badge=document.getElementById('dtw-badge');
-  badge.textContent=unique.length+' items'+(risk>0?' · '+risk+' overdue':'');
-  badge.style.background=risk>0?'#fef2f2':'#fffbeb';
-  badge.style.color=risk>0?'#dc2626':'#d97706';
-  const grid=document.getElementById('dtw-grid');
-  grid.innerHTML='';
-  unique.forEach(function(m){
-    const sc=SC[m.st]||'#888';
-    const item=document.createElement('div');item.className='dtw-item';
-    item.innerHTML='<span class="dtw-dt" style="background:'+sc+'18;color:'+sc+'">'+m.due.slice(5).replace('-','/')+'</span><span class="dtw-nm" title="'+m.t+'">'+m.t+'</span><span class="dtw-ow">'+m.o+'</span><div class="dtw-dot" style="background:'+sc+'"></div>';
-    grid.appendChild(item);
-  });
-}
-
-function showDetail(id){selId=(selId===id)?null:id;render();if(!selId)document.getElementById('detail-card').classList.remove('show');}
-
-function renderDetail(m){
-  const tr=TRACKS.find(function(t){return t.id===m.tr;});
-  document.getElementById('d-track').textContent=tr?tr.label:m.tr;
-  document.getElementById('d-title').textContent=m.t;
-  const sc=SC[m.st]||'#888';
-  const b=document.getElementById('d-badge');
-  b.style.background=sc+'18';b.style.color=sc;
-  const dot=document.createElement('div');dot.style.cssText='width:5px;height:5px;border-radius:50%;background:'+sc;
-  b.innerHTML='';b.appendChild(dot);b.appendChild(document.createTextNode(' '+(SL[m.st]||m.st)));
-  document.getElementById('d-grid').innerHTML='<div class="dcf"><label>Due Date</label><span>'+m.due+'</span></div><div class="dcf"><label>Owner</label><span>'+m.o+'</span></div>'+(m.c?'<div class="dcf"><label>Collaborator</label><span>'+m.c+'</span></div>':'')+'<div class="dcf"><label>Workstream</label><span>'+(tr?tr.label:m.tr)+'</span></div>';
-  const notes=document.getElementById('d-notes');
-  if(m.n){notes.textContent=m.n;notes.style.display='block';}else{notes.style.display='none';}
-  document.getElementById('detail-card').classList.add('show');
-}
-
-function clearSel(){selId=null;document.getElementById('detail-card').classList.remove('show');render();}
-
-// Canvas chart — Output Progress
-function drawChart(){
-  const canvas=document.getElementById('cppChart');
-  if(!canvas)return;
-  const W=canvas.parentElement.offsetWidth||600;
-  const H=158;
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=W*dpr;canvas.height=H*dpr;
-  canvas.style.width=W+'px';canvas.style.height=H+'px';
-  const ctx=canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-  const dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
-  const tc=dark?'#9ca3af':'#6b7280';
-  const LPAD=118,RPAD=32,TPAD=6,RH=14,RG=5;
-  ctx.font='9px system-ui,sans-serif';ctx.textBaseline='middle';
-
-  OUTPUTS.forEach(function(out,i){
-    const y=TPAD+i*(RH+RG);
-    const total=out.done+out.prog+out.atrisk+out.future;
-    if(total===0)return;
-    const bw=W-LPAD-RPAD;
-    ctx.fillStyle=tc;ctx.textAlign='right';
-    ctx.fillText(out.name,LPAD-5,y+RH/2);
-    // Track background
-    ctx.fillStyle=dark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.04)';
-    ctx.fillRect(LPAD,y,bw,RH);
-    let x=LPAD;
-    [{count:out.done,color:'#2F9E44'},{count:out.prog,color:'#E67700'},{count:out.atrisk,color:'#C92A2A'},{count:out.future,color:dark?'#374151':'#e5e7eb'}].forEach(function(s){
-      if(s.count===0)return;
-      const w=(s.count/total)*bw;
-      ctx.fillStyle=s.color;ctx.fillRect(x,y,w,RH);x+=w;
-    });
-    // Pct label
-    const pct=Math.round((out.done/total)*100);
-    ctx.fillStyle=tc;ctx.textAlign='left';
-    ctx.fillText(pct+'%',W-RPAD+3,y+RH/2);
-  });
-}
-
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('rfbtn').addEventListener('click',function(){document.getElementById('nbar').classList.add('show');});
-  document.getElementById('nbar-x').addEventListener('click',function(){document.getElementById('nbar').classList.remove('show');});
-  document.getElementById('dc-close').addEventListener('click',clearSel);
-
-  document.getElementById('view-grp').addEventListener('click',function(e){
-    const btn=e.target.closest('[data-view]');if(!btn)return;
-    viewMode=btn.dataset.view;
-    document.querySelectorAll('[data-view]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');
-    selId=null;document.getElementById('detail-card').classList.remove('show');render();
-  });
-
-  document.getElementById('group-grp').addEventListener('click',function(e){
-    const btn=e.target.closest('[data-group]');if(!btn)return;
-    groupBy=btn.dataset.group;
-    document.querySelectorAll('[data-group]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');
-    selId=null;render();
-  });
-
-  document.getElementById('dtw-hdr').addEventListener('click',function(){
-    dtwOpen=!dtwOpen;
-    document.getElementById('dtw-grid').style.display=dtwOpen?'grid':'none';
-    document.getElementById('dtw-chev').style.transform=dtwOpen?'':'rotate(-90deg)';
-  });
-
-  const tbDiv=document.getElementById('track-btns');
-  const allBtn=document.createElement('button');
-  allBtn.id='bt-all';allBtn.className='bt on';allBtn.textContent='All Tracks';
-  allBtn.style.cssText='background:#374151;color:#fff;border-color:transparent';
-  allBtn.addEventListener('click',function(){setTrack('all');});tbDiv.appendChild(allBtn);
-  TRACKS.forEach(function(tr){
-    const b=document.createElement('button');b.id='bt-'+tr.id;b.className='bt';b.textContent=tr.label;
-    b.addEventListener('click',function(){setTrack(tr.id);});tbDiv.appendChild(b);
-  });
-
-  render();
-  drawChart();
-  setTimeout(function(){const sc=document.getElementById('tl-sc');if(sc)sc.scrollLeft=Math.max(0,TX-260);},100);
-});
-
-function setTrack(id){
-  trackFilter=id;
-  document.querySelectorAll('.bt').forEach(function(b){b.classList.remove('on');b.style.background='';b.style.color='';b.style.borderColor='';});
-  const btn=document.getElementById('bt-'+id);
-  if(btn){btn.classList.add('on');if(id==='all'){btn.style.background='#374151';btn.style.color='#fff';btn.style.borderColor='transparent';}else{const tr=TRACKS.find(function(t){return t.id===id;});if(tr){btn.style.background=tr.color;btn.style.color='#fff';btn.style.borderColor='transparent';}}}
-  selId=null;document.getElementById('detail-card').classList.remove('show');render();
-}
-</script>
-<style>
-.osl{padding:2rem 1.5rem 3rem;font-family:inherit}
-.osl-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin:0 0 12px}
-.osl-toggles{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:#374151}
-.osl-toggles label{display:flex;align-items:center;gap:5px;cursor:pointer}
-.osl-toggles input{accent-color:#236CFF;width:14px;height:14px;cursor:pointer}
-.osl-tracks{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
-.osl-tracks span{font-size:12px;color:#6b7280}
-.osl-tbtn{font-size:11px;padding:4px 12px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:#374151;cursor:pointer;transition:all .15s}
-.osl-tbtn.on{background:#236CFF;color:#fff;border-color:#236CFF}
-.osl-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px;font-size:11.5px;color:#6b7280;align-items:center}
-.osl-legend span{display:flex;align-items:center;gap:5px}
-.osl-ld{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.osl-lk{width:10px;height:10px;border-radius:1px;transform:rotate(45deg);flex-shrink:0}
-.osl-lbar{width:18px;height:6px;border-radius:3px;opacity:.4;flex-shrink:0}
-.osl-outer{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff;position:relative}
-.osl-scroll{overflow-x:auto}
-.osl-table{min-width:860px;width:100%;position:relative}
-.osl-head{display:flex;background:#f9fafb;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10}
-.osl-rl{width:150px;flex-shrink:0;font-size:11px;font-weight:600;color:#6b7280;padding:8px 12px;border-right:1px solid #e5e7eb}
-.osl-months{flex:1;display:flex}
-.osl-mc{flex:1;text-align:center;font-size:10px;color:#9ca3af;padding:8px 0;border-left:1px solid #e5e7eb}
-.osl-row{display:flex;align-items:center;border-bottom:1px solid #f3f4f6;min-height:46px}
-.osl-row:last-child{border-bottom:none}
-.osl-row:hover{background:#fafafa}
-.osl-label{width:150px;flex-shrink:0;font-size:12px;padding:6px 10px 6px 10px;color:#111827;border-right:1px solid #f3f4f6;line-height:1.3;font-weight:500}
-.osl-canvas{flex:1;position:relative;height:46px}
-.osl-lcbar{position:absolute;height:8px;border-radius:4px;top:50%;transform:translateY(-50%);pointer-events:none;z-index:1}
-.osl-vline{position:absolute;top:0;height:100%;width:2px;border-radius:1px;pointer-events:none;z-index:3}
-.osl-dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%);top:50%;cursor:pointer;border:2px solid #fff;z-index:5;transition:transform .15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.osl-dot:hover{transform:translate(-50%,-50%) scale(1.5);z-index:20}
-.osl-key{position:absolute;width:13px;height:13px;border-radius:1px;transform:translate(-50%,-50%) rotate(45deg);top:50%;cursor:pointer;border:2px solid #fff;z-index:5;transition:transform .15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.osl-key:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.5);z-index:20}
-.osl-depsvg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:6;overflow:visible}
-.osl-hint{padding:6px 14px;font-size:11px;color:#9ca3af;background:#f9fafb;border-top:1px solid #e5e7eb}
-.osl-tip{position:fixed;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px 13px;font-size:12px;z-index:9999;pointer-events:none;max-width:220px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-.osl-tip-title{font-weight:600;color:#111827;margin-bottom:5px;line-height:1.3}
-.osl-tip-row{display:flex;gap:6px;align-items:center;color:#6b7280;margin-top:3px;font-size:11px}
-</style>
-
-<section class="osl">
-  <div class="osl-title">Swim lane — output lifecycle + dependencies</div>
-
-  <div class="osl-toggles">
-    <label><input type="checkbox" id="osl-lc" checked onchange="oslRender()"> Lifecycle bars</label>
-    <label><input type="checkbox" id="osl-dep" checked onchange="oslRender()"> Dependency arrows</label>
-    <label><input type="checkbox" id="osl-train" checked onchange="oslRender()"> Training links</label>
-    <label><input type="checkbox" id="osl-key" onchange="oslRender()"> Key milestones only</label>
-  </div>
-
-  <div class="osl-tracks">
-    <span>Track:</span>
-    <button class="osl-tbtn on" onclick="oslTrack('all',this)">All</button>
-    <button class="osl-tbtn" onclick="oslTrack('Curriculum',this)">Curriculum</button>
-    <button class="osl-tbtn" onclick="oslTrack('Product',this)">Product</button>
-    <button class="osl-tbtn" onclick="oslTrack('Higher Ed',this)">Higher Ed</button>
-    <button class="osl-tbtn" onclick="oslTrack('GTM',this)">GTM</button>
-    <button class="osl-tbtn" onclick="oslTrack('ProPartner',this)">ProPartner</button>
-    <button class="osl-tbtn" onclick="oslTrack('Educator PD',this)">Educator PD</button>
-  </div>
-
-  <div class="osl-legend">
-    <span><span class="osl-ld" style="background:#22c55e"></span>Complete</span>
-    <span><span class="osl-ld" style="background:#3b82f6"></span>In Progress</span>
-    <span><span class="osl-ld" style="background:#9ca3af"></span>Not Started</span>
-    <span><span class="osl-ld" style="background:#ef4444"></span>Overdue</span>
-    <span><span class="osl-lk" style="background:#f59e0b"></span>Key milestone</span>
-    <span><span class="osl-lbar" style="background:#236CFF"></span>Output lifecycle</span>
-    <span>
-      <svg width="30" height="10" style="overflow:visible;flex-shrink:0">
-        <line x1="1" y1="5" x2="22" y2="5" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 2"/>
-        <polygon points="22,2 28,5 22,8" fill="#f59e0b"/>
-      </svg>
-      Trains &rarr; enables
-    </span>
-    <span>
-      <svg width="30" height="10" style="overflow:visible;flex-shrink:0">
-        <line x1="1" y1="5" x2="22" y2="5" stroke="#ef4444" stroke-width="1.5"/>
-        <polygon points="22,2 28,5 22,8" fill="#ef4444"/>
-      </svg>
-      Blocks
-    </span>
-    <span><span style="display:inline-block;width:16px;height:2px;background:#ef4444;opacity:.7;border-radius:1px"></span>&nbsp;Today</span>
-    <span><span style="display:inline-block;width:16px;height:2px;background:#236CFF;opacity:.6;border-radius:1px"></span>&nbsp;BTS Aug 1</span>
-  </div>
-
-  <div class="osl-outer">
-    <div class="osl-scroll">
-      <div class="osl-table" id="osl-table"></div>
-    </div>
-    <div class="osl-hint">Click any dot for details &middot; Scroll to navigate</div>
-  </div>
-</section>
-
-<div id="osl-tip" class="osl-tip"></div>
-
-<script>
-(function(){
-var TODAY=new Date('2026-06-04');
-var SC={'Complete':'#22c55e','In Progress':'#3b82f6','Not started':'#9ca3af','Not Started':'#9ca3af','On Hold':'#a855f7','Overdue':'#ef4444'};
-var OC=['#236CFF','#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16','#6366f1'];
-var MONTHS=['May 26','Jun 26','Jul 26','Aug 26','Sep 26','Oct 26','Nov 26','Dec 26','Jan 27','Feb 27','Mar 27','Apr 27'];
-var RS=new Date(2026,4,1), RE=new Date(2027,4,30), TD=(RE-RS)/864e5;
-
-var OUTPUTS=[
-  {id:0,short:'Program',    track:'Program'},
-  {id:1,short:'QBEP',       track:'Curriculum'},
-  {id:2,short:'CAS Cur.',   track:'Curriculum'},
-  {id:3,short:'Resource Hub',track:'GTM'},
-  {id:4,short:'Edu. Badge', track:'Educator PD'},
-  {id:5,short:'100 CAS',    track:'Higher Ed'},
-  {id:6,short:'5 Premier',  track:'Higher Ed'},
-  {id:7,short:'3,800 Certs',track:'Higher Ed'},
-  {id:8,short:'25 PP Intern',track:'ProPartner'},
-  {id:9,short:'125 QBL',    track:'Higher Ed'},
-  {id:10,short:'100 PP',    track:'ProPartner'},
-];
-
-var MS=[
-  {o:1,l:'QB Express delivery finalized',    d:'2026-05-15',s:'In Progress',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
-  {o:1,l:'Draft QBEP landing page',          d:'2026-06-01',s:'Not Started',t:'GTM',        dr:'Katie / Caleb',k:false},
-  {o:1,l:'Finalize QBEP landing page',       d:'2026-06-12',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
-  {o:1,l:'LIVE on QBEP',                     d:'2026-07-31',s:'Not Started',t:'Product',    dr:'Bella Rozenkrants',k:true},
-  {o:1,l:'Level 3 curriculum delivery',      d:'2026-08-15',s:'Not Started',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
-  {o:2,l:'Content architecture confirmed',   d:'2026-05-31',s:'In Progress',t:'Product',    dr:'Bella Rozenkrants',k:false},
-  {o:2,l:'Curriculum partner engaged',       d:'2026-06-15',s:'Not Started',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
-  {o:2,l:'Full draft complete',              d:'2027-02-15',s:'Not Started',t:'Curriculum', dr:'Jillian Moskovitz',k:false},
-  {o:2,l:'LIVE — Full modular curriculum',   d:'2027-04-01',s:'Not Started',t:'Product',    dr:'Bella Rozenkrants',k:true},
-  {o:3,l:'Microsite brief approved',         d:'2026-05-20',s:'Not Started',t:'GTM',        dr:'Lynn / Jaclyn / Caleb',k:false},
-  {o:3,l:'Content strategy finalized',       d:'2026-05-31',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
-  {o:3,l:'Website wireframes reviewed',      d:'2026-06-20',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
-  {o:3,l:'Website draft + review',           d:'2026-07-01',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
-  {o:3,l:'QA + accessibility review',        d:'2026-07-15',s:'Not Started',t:'GTM',        dr:'Katie Rosenberg',k:false},
-  {o:3,l:'LIVE on I4E',                      d:'2026-08-01',s:'Not Started',t:'Product',    dr:'Bella Rozenkrants',k:true},
-  {o:4,l:'Badge brief complete',             d:'2026-05-14',s:'Complete',   t:'Educator PD',dr:'Emily Pressman',k:false},
-  {o:4,l:'Badge name & criteria aligned',    d:'2026-05-30',s:'Not Started',t:'Educator PD',dr:'Emily Pressman',k:false},
-  {o:4,l:'Edu PD curriculum built',          d:'2026-06-15',s:'Not Started',t:'Educator PD',dr:'Emily Pressman',k:false},
-  {o:4,l:'Pilot group identified',           d:'2026-06-30',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
-  {o:4,l:'PD tested with pilot',             d:'2026-07-15',s:'Not Started',t:'Educator PD',dr:'Emily Pressman',k:false},
-  {o:4,l:'Badge program LIVE',               d:'2026-08-01',s:'Not Started',t:'Educator PD',dr:'Emily / Bella',k:true},
-  {o:5,l:'Outreach strategy finalized',      d:'2026-04-15',s:'Complete',   t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
-  {o:5,l:'1-pager campus pitch',             d:'2026-05-03',s:'Complete',   t:'Higher Ed',  dr:'Caleb / Katie',k:false},
-  {o:5,l:'1-pager approved',                 d:'2026-05-15',s:'In Progress',t:'Program',    dr:'Lynn Letukas',k:false},
-  {o:5,l:'Educators onboarded to badge PD',  d:'2026-08-01',s:'Not Started',t:'Higher Ed',  dr:'Emily / Caleb',k:false},
-  {o:5,l:'100 campuses enrolled',            d:'2027-04-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:true},
-  {o:6,l:'Premier targets identified',       d:'2026-04-15',s:'Complete',   t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
-  {o:6,l:'Outreach initiated',               d:'2026-05-01',s:'Complete',   t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
-  {o:6,l:'Contracts drafted',                d:'2026-05-25',s:'In Progress',t:'Partnerships',dr:'Giovanni / Caleb',k:false},
-  {o:6,l:'All 5 contracts signed',           d:'2026-07-15',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:true},
-  {o:6,l:'Educators onboarded to badge PD',  d:'2026-08-01',s:'Not Started',t:'Higher Ed',  dr:'Emily / Caleb',k:false},
-  {o:7,l:'E2E cert journey mapped',          d:'2026-05-15',s:'In Progress',t:'Higher Ed',  dr:'Karla / Caleb',k:false},
-  {o:7,l:'BTS awareness campaign',           d:'2026-05-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb / Jillian',k:false},
-  {o:7,l:'Mid-year cert count reported',     d:'2027-01-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb Tegtmeier',k:false},
-  {o:7,l:'3,800 certifications',            d:'2027-04-01',s:'Not Started',t:'Higher Ed',  dr:'Caleb / Jillian',k:true},
-  {o:8,l:'Internship plan outlined',         d:'2026-05-15',s:'In Progress',t:'ProPartner', dr:'James Lee',k:false},
-  {o:8,l:'Student criteria defined',         d:'2026-05-30',s:'Not Started',t:'ProPartner', dr:'James Lee',k:false},
-  {o:8,l:'Firm outreach begins',             d:'2026-08-15',s:'Not Started',t:'ProPartner', dr:'James Lee',k:false},
-  {o:8,l:'First cohort matched',             d:'2027-01-15',s:'Not Started',t:'ProPartner', dr:'James Lee',k:false},
-  {o:8,l:'25 students placed',              d:'2027-04-01',s:'Not Started',t:'ProPartner', dr:'James Lee',k:true},
-  {o:9,l:'QB Live plan outlined',           d:'2026-06-01',s:'Not Started',t:'Program',    dr:'Karla / Caleb',k:false},
-  {o:9,l:'Firm outreach QB Live',           d:'2026-09-01',s:'Not Started',t:'Program',    dr:'TBD',k:false},
-  {o:9,l:'125 students placed',            d:'2027-04-01',s:'Not Started',t:'Higher Ed',  dr:'TBD',k:true},
-  {o:10,l:'Value prop brief developed',     d:'2026-05-15',s:'In Progress',t:'ProPartner', dr:'Jaclyn Anku',k:false},
-  {o:10,l:'QB Partner plan v1 complete',    d:'2026-05-25',s:'Not Started',t:'ProPartner', dr:'Jaclyn / Lynn',k:true},
-  {o:10,l:'First ProPartners paired',       d:'2026-08-01',s:'Not Started',t:'ProPartner', dr:'Jaclyn Anku',k:false},
-  {o:10,l:'100 ProPartners linked',         d:'2027-04-01',s:'Not Started',t:'ProPartner', dr:'Jaclyn Anku',k:true},
-];
-
-var DEPS=[
-  {fo:1,fl:'LIVE on QBEP',           to:3,tl:'LIVE on I4E',                     type:'trains'},
-  {fo:1,fl:'LIVE on QBEP',           to:7,tl:'3,800 certifications',            type:'trains'},
-  {fo:2,fl:'LIVE — Full modular curriculum',to:7,tl:'3,800 certifications',     type:'trains'},
-  {fo:3,fl:'LIVE on I4E',            to:5,tl:'Educators onboarded to badge PD', type:'trains'},
-  {fo:3,fl:'LIVE on I4E',            to:7,tl:'3,800 certifications',            type:'trains'},
-  {fo:4,fl:'Badge program LIVE',     to:5,tl:'Educators onboarded to badge PD', type:'trains'},
-  {fo:4,fl:'Badge program LIVE',     to:6,tl:'Educators onboarded to badge PD', type:'trains'},
-  {fo:4,fl:'Badge program LIVE',     to:8,tl:'Student criteria defined',        type:'trains'},
-  {fo:6,fl:'All 5 contracts signed', to:8,tl:'Firm outreach begins',            type:'blocks'},
-];
-
-var activeTrack='all';
-
-function pp(ds){
-  if(!ds)return null;
-  var days=(new Date(ds)-RS)/864e5;
-  return Math.min(99.5,Math.max(0.5,(days/TD)*100));
-}
-
-function getRange(oid){
-  var dates=MS.filter(function(m){return m.o===oid&&m.d;}).map(function(m){return new Date(m.d);}).sort(function(a,b){return a-b;});
-  return dates.length>=2?{s:dates[0],e:dates[dates.length-1]}:null;
-}
-
-window.oslTrack=function(t,btn){
-  activeTrack=t;
-  document.querySelectorAll('.osl-tbtn').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');
-  oslRender();
+const PLAIN_TEXT_FIELDS = {
+  'fldVpsw4Ak0eGXDU1': true, // Action Items: Output / Linked Goal
+  'fldZwzCusHHbAni5R': true, // WBP: Output
 };
 
-window.oslRender=function(){
-  var showLC   =document.getElementById('osl-lc').checked;
-  var showDep  =document.getElementById('osl-dep').checked;
-  var showTrain=document.getElementById('osl-train').checked;
-  var keyOnly  =document.getElementById('osl-key').checked;
-  var todP=pp(TODAY.toISOString().split('T')[0]);
-  var btsP=pp('2026-08-01');
-  var tbl=document.getElementById('osl-table');
+const DATE_FIELDS = {
+  'fld4tc3gYTI8FQVG8': true, // Action Items: Due Date
+  'fldRSsgkRXjIVoYr4': true, // WBP: Start Date
+  'fld3FOHMtPAFM0kqS': true, // WBP: End Date
+  'fldkkjU3VeqiZD6qP': true, // Risk: Target Closure Date
+  'fldYq10VzWbTGk5Ri': true, // Decision: Decision Date
+};
 
-  var visible=OUTPUTS.filter(function(o){
-    if(activeTrack==='all')return true;
-    if(o.track===activeTrack)return true;
-    return MS.some(function(m){return m.o===o.id&&m.t===activeTrack;});
-  });
+const CHECKBOX_FIELDS = {
+  'fldHN80NYWo97bjXq': true, // Decision: Communicate Program-Wide?
+  'fldjNYsDTT0SFKhx1': true, // WBP: Key Milestone?
+  'fldMOeHOn4xytNRek': true, // Workstreams: Team Aligned?
+};
 
-  var head='<div class="osl-head"><div class="osl-rl">Output</div><div class="osl-months">'
-    +MONTHS.map(function(m){return'<div class="osl-mc">'+m+'</div>';}).join('')
-    +'</div></div>';
+const NUMERIC_FIELDS = {
+  'fldzvzX3TRtK6QQOF': true, // Risk: Probability
+  'fldzwyzy4l4e0zX8e': true, // Risk: Impact
+  'fldmkNOwDANIY1O9z': true, // Risk: Risk Score
+};
 
-  var rows=visible.map(function(o){
-    var col=OC[o.id%OC.length];
-    var rowMs=MS.filter(function(m){return m.o===o.id&&(!keyOnly||m.k);});
-    var lc='';
-    if(showLC){
-      var r=getRange(o.id);
-      if(r){var sp=pp(r.s.toISOString().split('T')[0]),ep=pp(r.e.toISOString().split('T')[0]);
-        lc='<div class="osl-lcbar" style="left:'+sp+'%;width:'+(ep-sp)+'%;background:'+col+';opacity:.35"></div>';}
+const LINKED_RECORD_FIELDS = {
+  'fldjiB9FbvvPvQM14': true, // Action Items: Owner Link → Leads table
+};
+
+const CONFIG = {
+
+  actionItems: {
+    sheetName: 'Action Items',
+    tableId: 'tblhIDaulMAGJyn26',
+    dataStartRow: 3,
+    idColumn: 9,
+    idColIndex: 8,
+    totalCols: 9,
+    nameColumn: 'A',
+    fieldMap: {
+      'A': 'fldf3GpUH3yQPOLPD', // Action Item
+      'B': 'fldVpsw4Ak0eGXDU1', // Output / Goal (plain text override)
+      'C': 'fldQwMBksK5MFFvSn', // Status
+      'D': 'fldjiB9FbvvPvQM14', // Owner Link → Leads table
+      'E': 'fld4tc3gYTI8FQVG8', // Due Date
+      'F': 'fld3L4m1lBKtSMvCW', // Notes
+      'G': 'fld74l4F0Cgtrq0C7', // Track
+      'H': 'fldCEYxWLFPkUx6bJ', // Workstream
+    },
+    statusMap: {
+      'Completed': 'Completed', 'completed': 'Completed', 'Complete': 'Completed',
+      'In progress': 'In Progress', 'In Progress': 'In Progress', 'in progress': 'In Progress',
+      'Not started': 'Not Started', 'Not Started': 'Not Started', 'not started': 'Not Started',
+      'On Hold': 'On Hold', 'on hold': 'On Hold', 'On hold': 'On Hold',
+      'Blocked': 'Blocked', 'blocked': 'Blocked', 'Pending': 'In Progress',
+    },
+    trackMap: {
+      'Program': 'Program Oversight', 'Program Oversight': 'Program Oversight',
+      'Marketing': 'Marketing', 'ProPartner': 'ProPartner', 'Curriculum': 'Curriculum',
+      'Product': 'Product', 'Higher Ed': 'Higher Ed', 'Partnerships': 'Partnerships',
+      'Educator PD': 'Educator PD', 'GTM & Launch': 'GTM & Launch', 'GTM': 'GTM & Launch',
+      'Efficacy': 'Efficacy', 'Connect': 'Marketing', 'Internships': 'ProPartner',
     }
-    var dots=rowMs.map(function(m){
-      var p=pp(m.d);if(p===null)return'';
-      var sc=SC[m.s]||'#9ca3af';
-      var enc=encodeURIComponent(JSON.stringify({l:m.l,d:m.d,s:m.s,dr:m.dr,o:o.short}));
-      var ev='onmouseenter="oslTip(event,\''+enc+'\')" onmouseleave="oslHide()"';
-      return m.k
-        ?'<div class="osl-key" style="left:'+p+'%;background:'+sc+'" '+ev+'></div>'
-        :'<div class="osl-dot" style="left:'+p+'%;background:'+sc+'" '+ev+'></div>';
-    }).join('');
-    return'<div class="osl-row">'
-      +'<div class="osl-label" style="border-left:3px solid '+col+'">'+o.short+'</div>'
-      +'<div class="osl-canvas" id="oslc-'+o.id+'">'
-      +lc
-      +'<div class="osl-vline" style="left:'+todP+'%;background:#ef4444;opacity:.65"></div>'
-      +'<div class="osl-vline" style="left:'+btsP+'%;background:#236CFF;opacity:.55"></div>'
-      +dots
-      +'</div></div>';
-  }).join('');
+  },
 
-  tbl.innerHTML=head+rows;
-  tbl.style.position='relative';
+  finalWbp: {
+    sheetName: 'Final WBP',
+    tableId: 'tbllhHrneOE1CBHjW',
+    dataStartRow: 3,
+    idColumn: 11,
+    idColIndex: 10,
+    totalCols: 11,
+    nameColumn: 'C',
+    fieldMap: {
+      'B': 'fldZwzCusHHbAni5R',
+      'C': 'fld1QCnkePrRKjcGF',
+      'E': 'fldplx5b9aazClfFR',
+      'F': 'fldhedkZWJ4LKHtum',
+      'G': 'fldRSsgkRXjIVoYr4',
+      'H': 'fld3FOHMtPAFM0kqS',
+      'I': 'fldwRXsfWLaMXZCRP',
+      'J': 'fldiMy1G6ETdPMhtH',
+    },
+    statusMap: {
+      'Complete': 'Complete', 'Completed': 'Complete',
+      'In Progress': 'In Progress', 'In progress': 'In Progress',
+      'Pending': 'Pending', 'pending': 'Pending',
+      'Not Started': 'Not Started', 'Not started': 'Not Started',
+      'Blocked': 'Blocked',
+    },
+    trackMap: {
+      'Curriculum': 'Curriculum', 'Curriculum, Product': 'Curriculum',
+      'Product': 'Product', 'Higher Ed': 'Higher Ed',
+      'GTM': 'GTM & Launch', 'GTM & Launch': 'GTM & Launch', 'GTM, Higher Ed': 'GTM & Launch',
+      'ProPartner': 'ProPartner', 'ProPartner, Higher Ed': 'ProPartner',
+      'Educator PD': 'Educator PD', 'Higher Ed, Educator PD': 'Higher Ed',
+      'Program': 'Program Oversight', 'Leadership': 'Program Oversight',
+      'Partnerships': 'Partnerships', 'ProAdvisor': 'ProPartner',
+    },
+    milestoneKeywords: ['KEY MILESTONE', 'KEY EVENT', 'KEY DELIVERABLE', 'MILESTONE']
+  },
 
-  if(showDep||showTrain){
-    requestAnimationFrame(function(){oslDrawDeps(showDep,showTrain,visible);});
-  }
+  riskTracker: {
+    sheetName: 'Risk Tracker',
+    tableId: 'tblwGRq8uT3TqQXOg',
+    dataStartRow: 2,
+    idColumn: 17,
+    idColIndex: 16,
+    totalCols: 17,
+    nameColumn: 'B',
+    fieldMap: {
+      'A': 'fldgRB2gaePCjofrz',
+      'B': 'fldWYzsejkhi4GTXf',
+      'D': 'fldzvzX3TRtK6QQOF',
+      'E': 'fldzwyzy4l4e0zX8e',
+      'F': 'fldmkNOwDANIY1O9z',
+      'H': 'fldqSByry6OKJsHRR',
+      'J': 'fldaunjpZRe2kxyuI',
+      'K': 'fldEReA1WyCLeVLft',
+      'L': 'fldkkjU3VeqiZD6qP',
+    },
+    statusMap: {
+      'Open': 'Open', 'open': 'Open',
+      'In Mitigation': 'In Mitigation', 'in mitigation': 'In Mitigation',
+      'Monitored': 'Monitored', 'monitored': 'Monitored',
+      'Closed': 'Closed', 'closed': 'Closed',
+    }
+  },
+
+  decisionsLog: {
+    sheetName: 'Decision Log',
+    tableId: 'tblWeb4tDhoZUa4Tx',
+    dataStartRow: 3,
+    idColumn: 9,
+    idColIndex: 8,
+    totalCols: 9,
+    nameColumn: 'A',
+    fieldMap: {
+      'A': 'fldFoxI5CXJPMUNYv',
+      'B': 'fldioq1PRN1d4L3yS',
+      'C': 'fldtKHS8yqZIYakhF',
+      'D': 'fldNi3rbpTXHDjl4l',
+      'E': 'fldvmpPRmaHvhSitJ',
+      'F': 'fldYq10VzWbTGk5Ri',
+      'G': 'fldHN80NYWo97bjXq',
+      'H': 'fld5NfJRrLVoR1fc0',
+    },
+    trackMap: {
+      'Program': 'Program', 'Program Oversight': 'Program', 'Marketing': 'Marketing',
+      'Curriculum': 'Curriculum', 'Product': 'Product', 'Higher Ed': 'Higher Ed',
+      'ProPartner': 'ProPartner', 'Partnerships': 'Partnerships',
+    }
+  },
+
+  workstreams: {
+    sheetName: 'Workstreams + DACE',
+    tableId: 'tblP4gjQR7J9PixSQ',
+    dataStartRow: 13,
+    idColumn: 11,
+    idColIndex: 10,
+    totalCols: 11,
+    nameColumn: 'B',
+    fieldMap: {
+      'A': 'fldUnAMpB6AxMwJUY',
+      'B': 'fld8oepxTgpxDp7Ki',
+      'C': 'fldeWdvSgjESOAuRW',
+      'D': 'fld6u6dRfpdl6Kab6',
+      'E': 'fldki5U8M4Jef2FKH',
+      'F': 'fldLFvgpjdzHS95AB',
+      'G': 'fldKSjayHPBhH3P03',
+      'H': 'fldMOeHOn4xytNRek',
+      'I': 'fldko0xFGT5KZHh9w',
+      'J': 'fldhI76gXa3nNOoqw',
+    },
+    statusMap: {
+      'On Track': 'On Track', 'on track': 'On Track',
+      'At Risk': 'At Risk', 'at risk': 'At Risk',
+      'Off Track': 'Off Track', 'off track': 'Off Track',
+      'Complete': 'Complete', 'Completed': 'Complete',
+      'Not Started': 'Not Started', 'not started': 'Not Started',
+    },
+    trackMap: {
+      'Program': 'Program Oversight', 'Program Oversight': 'Program Oversight',
+      'Marketing': 'Marketing', 'ProPartner': 'ProPartner', 'Curriculum': 'Curriculum',
+      'Product': 'Product', 'Higher Ed': 'Higher Ed', 'Partnerships': 'Partnerships',
+      'Educator PD': 'Educator PD', 'GTM & Launch': 'GTM & Launch', 'GTM': 'GTM & Launch',
+    }
+  },
 };
 
-function oslDrawDeps(showB,showT,visible){
-  var tbl=document.getElementById('osl-table');
-  tbl.querySelectorAll('.osl-depsvg').forEach(function(s){s.remove();});
-  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('class','osl-depsvg');
-  var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-  [['trains','#f59e0b'],['blocks','#ef4444']].forEach(function(p){
-    var mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
-    mk.setAttribute('id','osl-mk-'+p[0]);mk.setAttribute('viewBox','0 0 10 10');
-    mk.setAttribute('refX','8');mk.setAttribute('refY','5');
-    mk.setAttribute('markerWidth','6');mk.setAttribute('markerHeight','6');
-    mk.setAttribute('orient','auto-start-reverse');
-    var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d','M2 1L8 5L2 9');path.setAttribute('fill','none');
-    path.setAttribute('stroke',p[1]);path.setAttribute('stroke-width','1.5');
-    path.setAttribute('stroke-linecap','round');
-    mk.appendChild(path);defs.appendChild(mk);
+// ============================================================
+// MAIN SYNC FUNCTION
+// ============================================================
+function syncAllTabs() {
+  Logger.log('=== CPP Sync v4.3.2 Started: ' + new Date().toISOString() + ' ===');
+  Logger.log('PAT prefix: ' + (AIRTABLE_TOKEN ? AIRTABLE_TOKEN.substring(0, 15) : 'NULL/EMPTY'));
+  Logger.log('BASE_ID: ' + BASE_ID);
+  try {
+    syncTab(CONFIG.actionItems);
+    Utilities.sleep(1000);
+    syncTab(CONFIG.finalWbp);
+    Utilities.sleep(1000);
+    syncTab(CONFIG.riskTracker);
+    Utilities.sleep(1000);
+    syncTab(CONFIG.decisionsLog);
+    Utilities.sleep(1000);
+    syncTab(CONFIG.workstreams);
+    Logger.log('=== Sync Complete: ' + new Date().toISOString() + ' ===');
+  } catch (e) {
+    Logger.log('SYNC ERROR: ' + e.message);
+    Logger.log(e.stack);
+  }
+}
+
+// ============================================================
+// SYNC ONE TAB
+// ============================================================
+function syncTab(tabConfig) {
+  Logger.log('SCRIPT VERSION: v4.3.2');
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  const sheet = ss.getSheetByName(tabConfig.sheetName);
+
+  if (!sheet) {
+    Logger.log('WARNING: Sheet "' + tabConfig.sheetName + '" not found');
+    return;
+  }
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow < tabConfig.dataStartRow) {
+    Logger.log('No data in: ' + tabConfig.sheetName);
+    return;
+  }
+
+  const totalRows = lastRow - tabConfig.dataStartRow + 1;
+  Logger.log('Syncing: ' + tabConfig.sheetName + ' (' + totalRows + ' rows)');
+
+  const values = sheet.getRange(tabConfig.dataStartRow, 1, totalRows, tabConfig.totalCols).getValues();
+
+  let created = 0, updated = 0, skipped = 0, errors = 0;
+
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i];
+    const rowNum = tabConfig.dataStartRow + i;
+    const nameVal = String(row[colLetterToIndex(tabConfig.nameColumn)]).trim();
+
+    if (!nameVal || nameVal === 'undefined') { skipped++; continue; }
+
+    const airtableId = String(row[tabConfig.idColIndex]).trim();
+    const fields = buildFields(row, tabConfig);
+
+    if (Object.keys(fields).length === 0) { skipped++; continue; }
+
+    try {
+      if (airtableId && airtableId.startsWith('rec')) {
+        updateRecord(tabConfig.tableId, airtableId, fields);
+        updated++;
+      } else {
+        const rec = createRecord(tabConfig.tableId, fields);
+        if (rec && rec.id) {
+          sheet.getRange(rowNum, tabConfig.idColumn).setValue(rec.id);
+          Logger.log('Created row ' + rowNum + ': ' + rec.id);
+        }
+        created++;
+      }
+      Utilities.sleep(150);
+    } catch(e) {
+      Logger.log('ERROR row ' + rowNum + ': ' + e.message);
+      errors++;
+    }
+  }
+
+  Logger.log(tabConfig.sheetName + ' — Created: ' + created + ', Updated: ' + updated + ', Skipped: ' + skipped + ', Errors: ' + errors);
+}
+
+// ============================================================
+// BUILD FIELDS
+// ============================================================
+function buildFields(row, tabConfig) {
+  const fields = {};
+
+  for (const col in tabConfig.fieldMap) {
+    const fieldId = tabConfig.fieldMap[col];
+    const colIdx = colLetterToIndex(col);
+    let val = row[colIdx];
+
+    if (fieldId.startsWith('TODO_')) {
+      Logger.log('SKIPPED (no field ID yet): col ' + col + ' in ' + tabConfig.sheetName);
+      continue;
+    }
+
+    if (val === null || val === undefined || val === '') continue;
+
+    if (val instanceof Date) {
+      if (DATE_FIELDS[fieldId]) {
+        fields[fieldId] = Utilities.formatDate(val, 'UTC', 'yyyy-MM-dd');
+      }
+      continue;
+    }
+
+    const str = String(val).trim();
+    if (str === '') continue;
+
+    if (str.toLowerCase() === 'false' && !CHECKBOX_FIELDS[fieldId]) continue;
+
+    if (LINKED_RECORD_FIELDS[fieldId]) {
+      var names;
+      if (str.indexOf(',') !== -1) {
+        names = str.split(',').map(function(n) { return n.trim(); }).filter(Boolean);
+      } else {
+        names = splitByKnownNames(str);
+      }
+      if (names.length > 0) {
+        fields[fieldId] = names;
+        Logger.log('LINKED_RECORD col ' + col + ': ' + JSON.stringify(names));
+      }
+      continue;
+    }
+
+    if (PLAIN_TEXT_FIELDS[fieldId]) {
+      fields[fieldId] = str;
+      continue;
+    }
+
+    if (DATE_FIELDS[fieldId]) {
+      const d = parseDate(str);
+      if (d) fields[fieldId] = d;
+      continue;
+    }
+
+    if (CHECKBOX_FIELDS[fieldId]) {
+      const u = str.toUpperCase();
+      fields[fieldId] = (u === 'TRUE' || u === 'YES' || u === '1' || u === 'X');
+      continue;
+    }
+
+    if (NUMERIC_FIELDS[fieldId]) {
+      const n = parseFloat(str.replace(/,/g, ''));
+      if (!isNaN(n)) fields[fieldId] = n;
+      continue;
+    }
+
+    if (isStatusField(fieldId) && tabConfig.statusMap) {
+      const mapped = tabConfig.statusMap[str];
+      if (mapped) { fields[fieldId] = mapped; }
+      else { Logger.log('UNMAPPED STATUS: "' + str + '" in ' + tabConfig.sheetName); }
+      continue;
+    }
+
+    if (isTrackField(fieldId) && tabConfig.trackMap) {
+      const mapped = tabConfig.trackMap[str];
+      if (mapped) {
+        fields[fieldId] = mapped;
+      } else {
+        const partial = partialTrack(str, tabConfig.trackMap);
+        if (partial) { fields[fieldId] = partial; }
+        else { Logger.log('UNMAPPED TRACK: "' + str + '" in ' + tabConfig.sheetName); }
+      }
+      continue;
+    }
+
+    if (tabConfig.milestoneKeywords && fieldId === 'fldiMy1G6ETdPMhtH') {
+      fields[fieldId] = str;
+      if (tabConfig.milestoneKeywords.some(function(kw) { return str.toUpperCase().includes(kw); })) {
+        fields['fldjNYsDTT0SFKhx1'] = true;
+      }
+      continue;
+    }
+
+    fields[fieldId] = str;
+  }
+
+  return fields;
+}
+
+// ============================================================
+// AIRTABLE API — createRecord + updateRecord + deleteRecord
+// ============================================================
+function createRecord(tableId, fields) {
+  const url = 'https://api.airtable.com/v0/' + BASE_ID + '/' + tableId;
+  const res = UrlFetchApp.fetch(url, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+    payload: JSON.stringify({ fields: fields, typecast: true }),
+    muteHttpExceptions: true
   });
-  svg.appendChild(defs);tbl.appendChild(svg);
-  var tr=tbl.getBoundingClientRect();
-  var vids=visible.map(function(o){return o.id;});
-  DEPS.forEach(function(dep){
-    if(dep.type==='blocks'&&!showB)return;
-    if(dep.type==='trains'&&!showT)return;
-    if(vids.indexOf(dep.fo)<0||vids.indexOf(dep.to)<0)return;
-    var fc=document.getElementById('oslc-'+dep.fo);
-    var tc2=document.getElementById('oslc-'+dep.to);
-    if(!fc||!tc2)return;
-    var fm=MS.filter(function(m){return m.o===dep.fo&&m.l===dep.fl;})[0];
-    var tm=MS.filter(function(m){return m.o===dep.to&&m.l===dep.tl;})[0];
-    if(!fm||!tm)return;
-    var fp=pp(fm.d),tp=pp(tm.d);if(fp===null||tp===null)return;
-    var fr=fc.getBoundingClientRect(),trc=tc2.getBoundingClientRect();
-    var x1=fr.left+(fp/100)*fr.width-tr.left, y1=fr.top+fr.height/2-tr.top;
-    var x2=trc.left+(tp/100)*trc.width-tr.left, y2=trc.top+trc.height/2-tr.top;
-    var col=dep.type==='blocks'?'#ef4444':'#f59e0b';
-    var mx=(x1+x2)/2;
-    var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d','M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2);
-    path.setAttribute('fill','none');path.setAttribute('stroke',col);
-    path.setAttribute('stroke-width','1.5');
-    path.setAttribute('stroke-dasharray',dep.type==='trains'?'4 3':'none');
-    path.setAttribute('opacity','0.7');
-    path.setAttribute('marker-end','url(#osl-mk-'+dep.type+')');
-    svg.appendChild(path);
+  const result = JSON.parse(res.getContentText());
+  if (result.error) {
+    Logger.log('CREATE ERROR: ' + JSON.stringify(result.error));
+    Logger.log('Fields sent: ' + JSON.stringify(fields));
+    throw new Error('Airtable CREATE failed: ' + result.error.type + ' — ' + result.error.message);
+  }
+  return result;
+}
+
+function updateRecord(tableId, recordId, fields) {
+  const url = 'https://api.airtable.com/v0/' + BASE_ID + '/' + tableId + '/' + recordId;
+  const res = UrlFetchApp.fetch(url, {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+    payload: JSON.stringify({ fields: fields, typecast: true }),
+    muteHttpExceptions: true
+  });
+  const result = JSON.parse(res.getContentText());
+  if (result.error) {
+    Logger.log('UPDATE ERROR (' + recordId + '): ' + JSON.stringify(result.error));
+    Logger.log('Fields sent: ' + JSON.stringify(fields));
+    throw new Error('Airtable UPDATE failed: ' + result.error.type + ' — ' + result.error.message);
+  }
+  return result;
+}
+
+// NEW in v4.3.2 — used by runArchiveOrphans() only
+function deleteRecord(tableId, recordId) {
+  const url = 'https://api.airtable.com/v0/' + BASE_ID + '/' + tableId + '/' + recordId;
+  const res = UrlFetchApp.fetch(url, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+    muteHttpExceptions: true
+  });
+  const result = JSON.parse(res.getContentText());
+  if (result.error) {
+    Logger.log('DELETE ERROR (' + recordId + '): ' + JSON.stringify(result.error));
+    throw new Error('Airtable DELETE failed: ' + result.error.type + ' — ' + result.error.message);
+  }
+  return result;
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function colLetterToIndex(l) { return l.toUpperCase().charCodeAt(0) - 65; }
+
+function isStatusField(f) {
+  return f === 'fldQwMBksK5MFFvSn'
+      || f === 'fldwRXsfWLaMXZCRP'
+      || f === 'fldqSByry6OKJsHRR'
+      || f === 'fldko0xFGT5KZHh9w';
+}
+
+function isTrackField(f) {
+  return f === 'fld74l4F0Cgtrq0C7'
+      || f === 'fldplx5b9aazClfFR'
+      || f === 'fldioq1PRN1d4L3yS'
+      || f === 'fldUnAMpB6AxMwJUY';
+}
+
+function partialTrack(val, map) {
+  const parts = val.split(',');
+  for (var i = 0; i < parts.length; i++) {
+    const p = parts[i].trim();
+    if (map[p]) return map[p];
+  }
+  return null;
+}
+
+function parseDate(val) {
+  if (!val || val.toLowerCase().includes('tbd')) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  const m = val.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (m) {
+    let y = m[3]; if (y.length === 2) y = '20' + y;
+    const mm = m[1].length < 2 ? '0' + m[1] : m[1];
+    const dd = m[2].length < 2 ? '0' + m[2] : m[2];
+    return y + '-' + mm + '-' + dd;
+  }
+  try {
+    const d = new Date(val);
+    if (!isNaN(d.getTime())) return Utilities.formatDate(d, 'UTC', 'yyyy-MM-dd');
+  } catch(e) {}
+  return null;
+}
+
+function splitByKnownNames(str) {
+  const knownFirstNames = [
+    'Allegra', 'Bella', 'Caleb', 'Carol', 'Emily', 'Enza',
+    'Giovanni', 'Jaclyn', 'Jared', 'James', 'Jillian', 'Joseph',
+    'Karla', 'Kathy', 'Katie', 'Liliana', 'Lynn'
+  ];
+  const names = [];
+  var current = '';
+  const words = str.split(' ');
+  for (var i = 0; i < words.length; i++) {
+    const word = words[i];
+    if (i > 0 && knownFirstNames.indexOf(word) !== -1) {
+      if (current.trim()) names.push(current.trim());
+      current = word;
+    } else {
+      current += (current ? ' ' : '') + word;
+    }
+  }
+  if (current.trim()) names.push(current.trim());
+  return names;
+}
+
+// ============================================================
+// TRIGGER SETUP
+// ============================================================
+function setupTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === 'syncAllTabs') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('syncAllTabs').timeBased().everyMinutes(15).create();
+  Logger.log('Trigger installed — syncAllTabs every 15 minutes');
+}
+
+// ============================================================
+// TEST FUNCTIONS
+// ============================================================
+function testActionItemsOnly()  { Logger.log('Testing Action Items...');    syncTab(CONFIG.actionItems); }
+function testWBPOnly()          { Logger.log('Testing Final WBP...');       syncTab(CONFIG.finalWbp); }
+function testRiskOnly()         { Logger.log('Testing Risk Tracker...');    syncTab(CONFIG.riskTracker); }
+function testDecisionsOnly()    { Logger.log('Testing Decision Log...');    syncTab(CONFIG.decisionsLog); }
+function testWorkstreamsOnly()  { Logger.log('Testing Workstreams...');     syncTab(CONFIG.workstreams); }
+
+// ============================================================
+// NEW in v4.3.2 — UTILITY: Archive Orphaned Action Item Records
+// ============================================================
+//
+// PURPOSE:
+//   The sync script only creates and updates — it never deletes.
+//   Over time, records removed from the sheet accumulate in
+//   Airtable as orphans, cluttering the Kanban with ghost cards.
+//   This function cleans them up safely.
+//
+// WHAT IT DOES:
+//   1. Reads all Airtable record IDs from col I (Action Items sheet)
+//      → these are the source-of-truth IDs
+//   2. Fetches ALL records from Airtable in paginated batches
+//      → handles 200+ records correctly
+//   3. For each Airtable record NOT in the sheet:
+//      a. If action item text contains "TEST" or "delete this"
+//         (case-insensitive) → DELETES the record permanently
+//      b. All others → marks Status = "Completed" (preserves history)
+//   4. Records that ARE in the sheet → untouched
+//
+// DRY RUN MODE (default = true):
+//   When DRY_RUN = true, the function logs every action it WOULD
+//   take without making any changes. Review the log carefully,
+//   then set DRY_RUN = false and run again to execute for real.
+//
+// HOW TO RUN:
+//   Step 1: Run runArchiveOrphans()          ← dry run, review log
+//   Step 2: Set DRY_RUN = false below
+//   Step 3: Run runArchiveOrphans() again    ← executes for real
+//   Step 4: Set DRY_RUN = true again         ← reset for safety
+//
+// SAFE: never modifies records that exist in the sheet.
+// ONE-TIME manual utility — never runs automatically.
+// ============================================================
+function runArchiveOrphans() {
+
+  var DRY_RUN = true; // ← SET TO false TO EXECUTE. true = log only, no changes.
+
+  var TABLE_ID    = CONFIG.actionItems.tableId;       // tblhIDaulMAGJyn26
+  var STATUS_FID  = 'fldQwMBksK5MFFvSn';             // Status field
+  var NAME_FID    = 'fldf3GpUH3yQPOLPD';             // Action Item text field
+
+  Logger.log('============================================================');
+  Logger.log('runArchiveOrphans() — v4.3.2');
+  Logger.log('Mode: ' + (DRY_RUN ? '🔍 DRY RUN — no changes will be made' : '⚡ LIVE — changes will be applied'));
+  Logger.log('============================================================');
+
+  // ── Step 1: Read all sheet IDs from col I (Action Items tab) ──
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName('Action Items');
+  if (!sheet) {
+    Logger.log('❌ Action Items sheet not found. Aborting.');
+    return;
+  }
+
+  var lastRow = sheet.getLastRow();
+  var dataStartRow = CONFIG.actionItems.dataStartRow; // row 3
+  var idColIndex   = CONFIG.actionItems.idColIndex;   // col I = index 8, 1-based = 9
+
+  var sheetIds = {};
+  if (lastRow >= dataStartRow) {
+    var idValues = sheet.getRange(dataStartRow, 9, lastRow - dataStartRow + 1, 1).getValues();
+    idValues.forEach(function(row) {
+      var id = String(row[0]).trim();
+      if (id && id.startsWith('rec')) sheetIds[id] = true;
+    });
+  }
+  Logger.log('✅ Sheet IDs loaded: ' + Object.keys(sheetIds).length + ' records');
+
+  // ── Step 2: Fetch ALL Airtable records (paginated) ──
+  var allAirtableRecords = [];
+  var offset = null;
+  var page = 0;
+
+  do {
+    page++;
+    var url = 'https://api.airtable.com/v0/' + BASE_ID + '/' + TABLE_ID
+            + '?fields[]=' + NAME_FID
+            + '&fields[]=' + STATUS_FID
+            + '&pageSize=100'
+            + (offset ? '&offset=' + offset : '');
+
+    var res = UrlFetchApp.fetch(url, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+      muteHttpExceptions: true
+    });
+    var body = JSON.parse(res.getContentText());
+
+    if (body.error) {
+      Logger.log('❌ Airtable fetch error on page ' + page + ': ' + JSON.stringify(body.error));
+      return;
+    }
+
+    var records = body.records || [];
+    allAirtableRecords = allAirtableRecords.concat(records);
+    offset = body.offset || null;
+    Logger.log('  Page ' + page + ': fetched ' + records.length + ' records (total so far: ' + allAirtableRecords.length + ')');
+    Utilities.sleep(200);
+
+  } while (offset);
+
+  Logger.log('✅ Total Airtable records fetched: ' + allAirtableRecords.length);
+
+  // ── Step 3: Compare and act ──
+  var toComplete = [];
+  var toDelete   = [];
+  var inSheet    = 0;
+
+  allAirtableRecords.forEach(function(rec) {
+    var recId   = rec.id;
+    var recName = (rec.fields && rec.fields[NAME_FID]) ? String(rec.fields[NAME_FID]) : '';
+    var recStatus = (rec.fields && rec.fields[STATUS_FID]) ? String(rec.fields[STATUS_FID]) : '';
+
+    if (sheetIds[recId]) {
+      // Record exists in sheet — leave it alone
+      inSheet++;
+      return;
+    }
+
+    // Orphan — determine action
+    var nameLower = recName.toLowerCase();
+    var isTestRecord = (
+      nameLower.indexOf('test') !== -1 ||
+      nameLower.indexOf('delete this') !== -1 ||
+      nameLower.indexOf('delete me') !== -1 ||
+      nameLower.indexOf('— delete') !== -1 ||
+      nameLower.indexOf('- delete') !== -1
+    );
+
+    if (isTestRecord) {
+      toDelete.push({ id: recId, name: recName });
+    } else {
+      // Only queue for Completed if not already Completed
+      if (recStatus !== 'Completed') {
+        toComplete.push({ id: recId, name: recName, currentStatus: recStatus });
+      } else {
+        // Already Completed orphan — log but skip
+        Logger.log('  SKIP (already Completed orphan): ' + recId + ' — ' + recName.substring(0, 60));
+      }
+    }
+  });
+
+  Logger.log('------------------------------------------------------------');
+  Logger.log('AUDIT RESULTS:');
+  Logger.log('  In sheet (untouched):       ' + inSheet);
+  Logger.log('  Orphans → mark Completed:   ' + toComplete.length);
+  Logger.log('  Orphans → DELETE (test):    ' + toDelete.length);
+  Logger.log('------------------------------------------------------------');
+
+  // ── Step 4: Log or execute Completed updates ──
+  if (toComplete.length > 0) {
+    Logger.log('');
+    Logger.log('── MARKING COMPLETED (' + (DRY_RUN ? 'DRY RUN' : 'LIVE') + ') ──');
+    var completedOk = 0, completedErr = 0;
+
+    toComplete.forEach(function(item) {
+      Logger.log('  → Completed: ' + item.id + ' [was: ' + (item.currentStatus || 'blank') + '] — ' + item.name.substring(0, 70));
+      if (!DRY_RUN) {
+        try {
+          updateRecord(TABLE_ID, item.id, { [STATUS_FID]: 'Completed' });
+          completedOk++;
+          Utilities.sleep(150);
+        } catch(e) {
+          Logger.log('    ❌ ERROR: ' + e.message);
+          completedErr++;
+        }
+      }
+    });
+
+    if (!DRY_RUN) {
+      Logger.log('  Completed: ' + completedOk + ' succeeded, ' + completedErr + ' errors');
+    }
+  }
+
+  // ── Step 5: Log or execute deletions ──
+  if (toDelete.length > 0) {
+    Logger.log('');
+    Logger.log('── DELETING TEST RECORDS (' + (DRY_RUN ? 'DRY RUN' : 'LIVE') + ') ──');
+    var deletedOk = 0, deletedErr = 0;
+
+    toDelete.forEach(function(item) {
+      Logger.log('  🗑️  Delete: ' + item.id + ' — ' + item.name.substring(0, 70));
+      if (!DRY_RUN) {
+        try {
+          deleteRecord(TABLE_ID, item.id);
+          deletedOk++;
+          Utilities.sleep(150);
+        } catch(e) {
+          Logger.log('    ❌ ERROR: ' + e.message);
+          deletedErr++;
+        }
+      }
+    });
+
+    if (!DRY_RUN) {
+      Logger.log('  Deleted: ' + deletedOk + ' succeeded, ' + deletedErr + ' errors');
+    }
+  }
+
+  Logger.log('');
+  Logger.log('============================================================');
+  if (DRY_RUN) {
+    Logger.log('DRY RUN COMPLETE — no changes were made.');
+    Logger.log('Review the log above, then set DRY_RUN = false and run again.');
+  } else {
+    Logger.log('runArchiveOrphans() COMPLETE.');
+    Logger.log('Set DRY_RUN = true again to reset for safety.');
+  }
+  Logger.log('============================================================');
+}
+
+// ============================================================
+// UTILITY: Clear Risk Tracker IDs only
+// ============================================================
+function clearRiskIdsOnly() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName('Risk Tracker');
+  if (!sheet) { Logger.log('⚠️ Risk Tracker sheet not found'); return; }
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) { Logger.log('No data rows in Risk Tracker'); return; }
+  var numRows = lastRow - 2 + 1;
+  sheet.getRange(2, 17, numRows, 1).clearContent();
+  Logger.log('✅ Cleared ' + numRows + ' ID cells in Risk Tracker column Q');
+  Logger.log('Next step: run testRiskOnly() to recreate records in Airtable');
+}
+
+// ============================================================
+// UTILITY: Clear ALL Airtable ID columns across all 5 tabs
+// ============================================================
+function clearAllAirtableIds() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var tabs = [
+    { name: 'Action Items',       dataStartRow: 3,  idColumn: 9  },
+    { name: 'Final WBP',          dataStartRow: 3,  idColumn: 11 },
+    { name: 'Risk Tracker',       dataStartRow: 2,  idColumn: 17 },
+    { name: 'Decision Log',       dataStartRow: 3,  idColumn: 9  },
+    { name: 'Workstreams + DACE', dataStartRow: 13, idColumn: 11 },
+  ];
+  tabs.forEach(function(t) {
+    var sheet = ss.getSheetByName(t.name);
+    if (!sheet) { Logger.log('⚠️ Sheet not found: ' + t.name); return; }
+    var lastRow = sheet.getLastRow();
+    if (lastRow < t.dataStartRow) { Logger.log('No data rows in: ' + t.name); return; }
+    var numRows = lastRow - t.dataStartRow + 1;
+    sheet.getRange(t.dataStartRow, t.idColumn, numRows, 1).clearContent();
+    Logger.log('✅ Cleared ' + numRows + ' ID cells in: ' + t.name);
+  });
+  Logger.log('Done. All Airtable ID columns cleared. Run syncAllTabs() next.');
+}
+
+// ============================================================
+// DIAGNOSTICS
+// ============================================================
+function logRiskFields() {
+  const url = 'https://api.airtable.com/v0/meta/bases/' + BASE_ID + '/tables';
+  const res = UrlFetchApp.fetch(url, {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+    muteHttpExceptions: true
+  });
+  const data = JSON.parse(res.getContentText());
+  const riskTable = (data.tables || []).find(function(t) { return t.id === 'tblwGRq8uT3TqQXOg'; });
+  if (!riskTable) { Logger.log('Risk Tracker table not found'); return; }
+  Logger.log('Risk Tracker fields:');
+  (riskTable.fields || []).forEach(function(f) {
+    Logger.log('  ' + f.name + ' (' + f.type + ') → ' + f.id);
   });
 }
 
-window.oslTip=function(e,enc){
-  try{
-    var d=JSON.parse(decodeURIComponent(enc));
-    var col=SC[d.s]||'#9ca3af';
-    var tip=document.getElementById('osl-tip');
-    tip.innerHTML='<div class="osl-tip-title">'+d.l+'</div>'
-      +'<div class="osl-tip-row"><span style="width:8px;height:8px;border-radius:50%;background:'+col+';display:inline-block;flex-shrink:0"></span>'+d.s+'</div>'
-      +'<div class="osl-tip-row">'+d.d+'</div>'
-      +'<div class="osl-tip-row">'+d.dr+'</div>'
-      +'<div class="osl-tip-row" style="color:#9ca3af;font-size:10px">'+d.o+'</div>';
-    tip.style.display='block';
-    tip.style.left=(e.clientX+14)+'px';
-    tip.style.top=(e.clientY-10)+'px';
-  }catch(err){}
-};
-window.oslHide=function(){document.getElementById('osl-tip').style.display='none';};
-document.addEventListener('mousemove',function(e){
-  var t=document.getElementById('osl-tip');
-  if(t.style.display!=='none'){t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY-10)+'px';}
-});
+function testReadAllTables() {
+  const tables = [
+    { name: 'Action Items',       id: 'tblhIDaulMAGJyn26', f: 'fldf3GpUH3yQPOLPD' },
+    { name: 'Final WBP',          id: 'tbllhHrneOE1CBHjW', f: 'fld1QCnkePrRKjcGF' },
+    { name: 'Risk Tracker',       id: 'tblwGRq8uT3TqQXOg', f: 'fldgRB2gaePCjofrz' },
+    { name: 'Decision Log',       id: 'tblWeb4tDhoZUa4Tx', f: 'fldFoxI5CXJPMUNYv' },
+    { name: 'Workstreams + DACE', id: 'tblP4gjQR7J9PixSQ', f: 'fld8oepxTgpxDp7Ki' },
+  ];
+  tables.forEach(function(t) {
+    const url = 'https://api.airtable.com/v0/' + BASE_ID + '/' + t.id + '?fields[]=' + t.f + '&maxRecords=3';
+    const res = UrlFetchApp.fetch(url, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+      muteHttpExceptions: true
+    });
+    const r = JSON.parse(res.getContentText());
+    if (r.error) {
+      Logger.log(t.name + ' → ERROR: ' + JSON.stringify(r.error));
+    } else {
+      Logger.log(t.name + ' → OK: ' + (r.records || []).length + ' records');
+    }
+  });
+}
 
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',oslRender);
-}else{oslRender();}
-})();
-</script>
-<!-- ============================================================
-  END OUTPUT SWIM LANE
-  ============================================================ -->
-</body>
-</html>
+function logAllTablesInBase() {
+  const url = 'https://api.airtable.com/v0/meta/bases/' + BASE_ID + '/tables';
+  const res = UrlFetchApp.fetch(url, {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+    muteHttpExceptions: true
+  });
+  const data = JSON.parse(res.getContentText());
+  if (data.error) { Logger.log('ERROR: ' + JSON.stringify(data.error)); return; }
+  Logger.log('Tables in base ' + BASE_ID + ':');
+  (data.tables || []).forEach(function(t) {
+    Logger.log('  TABLE: "' + t.name + '" → ' + t.id);
+    (t.fields || []).forEach(function(f) {
+      Logger.log('    FIELD: ' + f.name + ' (' + f.type + ') → ' + f.id);
+    });
+  });
+}
+
+function discoverFieldIds() {
+  var tables = [
+    { name: 'Action Items',       id: 'tblhIDaulMAGJyn26' },
+    { name: 'Final WBP',          id: 'tbllhHrneOE1CBHjW' },
+    { name: 'Risk Tracker',       id: 'tblwGRq8uT3TqQXOg' },
+    { name: 'Decision Log',       id: 'tblWeb4tDhoZUa4Tx' },
+    { name: 'Workstreams + DACE', id: 'tblP4gjQR7J9PixSQ' },
+  ];
+  tables.forEach(function(t) {
+    var url = 'https://api.airtable.com/v0/' + BASE_ID + '/' + t.id + '?maxRecords=1';
+    var res = UrlFetchApp.fetch(url, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+      muteHttpExceptions: true
+    });
+    var code = res.getResponseCode();
+    var body = JSON.parse(res.getContentText());
+    Logger.log('--- ' + t.name + ' (' + t.id + ') | HTTP ' + code + ' ---');
+    if (code !== 200) { Logger.log('  ERROR: ' + JSON.stringify(body.error)); return; }
+    var records = body.records || [];
+    if (records.length === 0) { Logger.log('  Table exists but has NO records'); return; }
+    Logger.log('  ✅ Table accessible. Field IDs found:');
+    var fields = records[0].fields || {};
+    Object.keys(fields).forEach(function(fieldId) {
+      var val = fields[fieldId];
+      var preview = (typeof val === 'string') ? val.substring(0, 50) : JSON.stringify(val).substring(0, 50);
+      Logger.log('    ' + fieldId + '  →  "' + preview + '"');
+    });
+  });
+}
+
+function diagnosePAT() {
+  Logger.log('=== PAT DIAGNOSTIC ===');
+  Logger.log('BASE_ID in script:  ' + BASE_ID);
+  if (!AIRTABLE_TOKEN) {
+    Logger.log('❌ AIRTABLE_TOKEN is NULL or EMPTY');
+    Logger.log('Fix: Apps Script → Project Settings → Script Properties');
+    Logger.log('     Confirm property "AIRTABLE_PAT" exists with your pat... value');
+    return;
+  }
+  Logger.log('✅ Token found. Prefix: ' + AIRTABLE_TOKEN.substring(0, 15) + '...');
+  Logger.log('   Full length: ' + AIRTABLE_TOKEN.length + ' chars');
+  var testUrl = 'https://api.airtable.com/v0/' + BASE_ID + '/tblhIDaulMAGJyn26?maxRecords=1';
+  var res = UrlFetchApp.fetch(testUrl, {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+    muteHttpExceptions: true
+  });
+  var code = res.getResponseCode();
+  var body = JSON.parse(res.getContentText());
+  Logger.log('--- Test: Action Items table read ---');
+  Logger.log('HTTP status: ' + code);
+  if (code === 200) {
+    Logger.log('✅ SUCCESS — PAT has access. Run syncAllTabs().');
+  } else if (body.error && body.error.type === 'INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND') {
+    Logger.log('❌ INVALID_PERMISSIONS — checking base access...');
+    var baseUrl = 'https://api.airtable.com/v0/meta/bases';
+    var baseRes = UrlFetchApp.fetch(baseUrl, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN },
+      muteHttpExceptions: true
+    });
+    var baseBody = JSON.parse(baseRes.getContentText());
+    if (baseBody.bases) {
+      Logger.log('Bases this PAT can access:');
+      baseBody.bases.forEach(function(b) {
+        var match = b.id === BASE_ID ? ' ← ✅ MATCHES script BASE_ID' : '';
+        Logger.log('  ' + b.name + ' → ' + b.id + match);
+      });
+      var found = baseBody.bases.some(function(b) { return b.id === BASE_ID; });
+      if (!found) {
+        Logger.log('❌ Base ' + BASE_ID + ' NOT in PAT access list.');
+        Logger.log('   Fix: Edit PAT → Access → Add base "FINAL Career Pipeline Program | FY26-27"');
+      }
+    }
+  } else {
+    Logger.log('Unexpected response: ' + JSON.stringify(body));
+  }
+  Logger.log('=== DIAGNOSTIC COMPLETE ===');
+}
